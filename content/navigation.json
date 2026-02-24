@@ -1,0 +1,24 @@
+{
+  "parents": [
+    {
+      "id": "men",
+      "title": "Мужская",
+      "children": [
+        { "slug": "kedy", "title": "кеды" },
+        { "slug": "krossovki", "title": "кроссовки" },
+        { "slug": "tufli", "title": "туфли" },
+        { "slug": "botinki", "title": "ботинки" }
+      ]
+    },
+    {
+      "id": "women",
+      "title": "Женская",
+      "children": [
+        { "slug": "kedy", "title": "кеды" },
+        { "slug": "krossovki", "title": "кроссовки" },
+        { "slug": "tufli", "title": "туфли" },
+        { "slug": "botinki", "title": "ботинки" }
+      ]
+    }
+  ]
+}
