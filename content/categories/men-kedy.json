@@ -1,10 +1,13 @@
 {
   "parentId": "men",
   "slug": "kedy",
-  "slugTitle": "кеды",
+  "slugTitle": "ÐºÐµÐ´Ñ",
   "title": "Мужские кеды",
-  "description": "Классические силуэты и современные материалы. Лёгкие, универсальные, на каждый день.",
-  "grid": { "columns": 3, "gap": "24px" },
+  "description": "что-то там",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
   "items": [
     {
       "image": "assets/img/men-kedy-1.jpg",
