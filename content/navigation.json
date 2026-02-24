@@ -2,45 +2,45 @@
   "parents": [
     {
       "id": "men",
-      "title": "Мужская",
+      "title": "ÐÑÐ¶ÑÐºÐ°Ñ",
       "children": [
         {
           "slug": "kedy",
-          "title": "Кеды"
+          "title": "ÐÐµÐ´Ñ"
         },
         {
           "slug": "krossovki",
-          "title": "Кроссовки"
+          "title": "ÐÑÐ¾ÑÑÐ¾Ð²ÐºÐ¸"
         },
         {
           "slug": "tufli",
-          "title": "Туфли"
+          "title": "Ð¢ÑÑÐ»Ð¸"
         },
         {
           "slug": "botinki",
-          "title": "Ботинки"
+          "title": "ÐÐ¾ÑÐ¸Ð½ÐºÐ¸"
         }
       ]
     },
     {
       "id": "women",
-      "title": "Женская",
+      "title": "ÐÐµÐ½ÑÐºÐ°Ñ",
       "children": [
         {
           "slug": "kedy",
-          "title": "Кеды"
+          "title": "ÐÐµÐ´Ñ"
         },
         {
           "slug": "krossovki",
-          "title": "Кроссовки"
+          "title": "ÐÑÐ¾ÑÑÐ¾Ð²ÐºÐ¸"
         },
         {
           "slug": "tufli",
-          "title": "Туфли"
+          "title": "Ð¢ÑÑÐ»Ð¸"
         },
         {
           "slug": "botinki",
-          "title": "Ботинки"
+          "title": "ÐÐ¾ÑÐ¸Ð½ÐºÐ¸"
         }
       ]
     }
