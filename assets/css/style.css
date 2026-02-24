@@ -262,29 +262,3 @@ a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
     .menu-promo .promo img { width: 90vw; }
   }
 }
-/* 1) Крестик без кружка */
-.menu-close {
-  position: absolute; top: 16px; left: 24px;
-  width: 36px; height: 36px;
-  border: 0; border-radius: 0; background: transparent;
-  cursor: pointer; display: grid; place-items: center;
-}
-.menu-close span {
-  position: absolute; display: block;
-  width: 22px; height: 2px; background: var(--fg);
-  transition: opacity .2s ease;
-}
-.menu-close span:first-child { transform: rotate(45deg); }
-.menu-close span:last-child  { transform: rotate(-45deg); }
-.menu-close:hover { opacity: .8; }
-.menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-
-/* 2) «Главная» — жирным */
-.menu-home a { font-weight: 700 !important; }
-
-/* 3) Мобильная версия: левая и правая колонки в один ряд; ниже — два промо-блока */
-@media (max-width: 1023.98px) {
-  /* Две равные колонки в сетке меню */
-  .menu-grid {
-    grid-template-columns: repeat(2, minmax(140px, 1fr));
-    column-gap: 12
