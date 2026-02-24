@@ -1,9 +1,9 @@
 {
   "parentId": "men",
   "slug": "kedy",
-  "slugTitle": "ÃÂºÃÂµÃÂ´ÃÂ",
-  "title": "Кеды",
-  "description": "что то ттам",
+  "slugTitle": "ÃÂÃÂºÃÂÃÂµÃÂÃÂ´ÃÂÃÂ",
+  "title": "w",
+  "description": "qe",
   "grid": {
     "columns": 3,
     "gap": "24px"
@@ -29,7 +29,7 @@
     },
     {
       "image": "assets/img/uploads/1771933026632-men-kedy-1.jpg",
-      "caption": "прп",
+      "caption": "Ð¿ÑÐ¿",
       "link": "https://example.com/kedy-3",
       "target": "_blank"
     }
