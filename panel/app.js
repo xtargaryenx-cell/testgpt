@@ -1,0 +1,304 @@
+const state = {
+  owner: "", repo: "", branch: "main", token: "",
+  home: null, nav: null, cat: null, items: []
+};
+
+const api = {
+  async get(path) {
+    const r = await fetch(`https://api.github.com/repos/${state.owner}/${state.repo}/contents/${path}?ref=${state.branch}`, {
+      headers: { Authorization: `token ${state.token}` }
+    });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async put(path, contentBase64, sha, message) {
+    const r = await fetch(`https://api.github.com/repos/${state.owner}/${state.repo}/contents/${path}`, {
+      method: "PUT",
+      headers: { Authorization: `token ${state.token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: message || `Update ${path}`,
+        content: contentBase64,
+        branch: state.branch,
+        sha
+      })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async getText(path) {
+    const j = await this.get(path);
+    const content = atob(j.content.replace(/\n/g, ""));
+    return { text: content, sha: j.sha };
+  },
+  async getJSON(path) {
+    const { text, sha } = await this.getText(path);
+    return { json: JSON.parse(text), sha };
+  },
+  async putJSON(path, obj, sha, msg) {
+    const txt = JSON.stringify(obj, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(txt)));
+    return this.put(path, b64, sha, msg);
+  },
+  async uploadFile(destPath, file) {
+    const arrayBuf = await file.arrayBuffer();
+    const b64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuf)));
+    // no sha for new file
+    return this.put(destPath, b64, undefined, `Upload ${destPath}`);
+  }
+};
+
+function el(tag, props = {}, children = []) {
+  const e = document.createElement(tag);
+  Object.entries(props).forEach(([k, v]) => {
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else e.setAttribute(k, v);
+  });
+  (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (typeof c === "string") e.appendChild(document.createTextNode(c));
+    else if (c) e.appendChild(c);
+  });
+  return e;
+}
+
+function setStatus(msg) { document.getElementById("status").textContent = msg; }
+
+async function connect() {
+  state.owner = document.getElementById("ghOwner").value.trim();
+  state.repo = document.getElementById("ghRepo").value.trim();
+  state.branch = document.getElementById("ghBranch").value.trim() || "main";
+  state.token = document.getElementById("ghToken").value.trim();
+
+  if (!state.owner || !state.repo || !state.token) {
+    setStatus("Укажите owner, repo и токен");
+    return;
+  }
+  setStatus("Проверка репозитория...");
+  try {
+    // пробуем прочитать файлы
+    const home = await api.getJSON("content/home.json");
+    const nav = await api.getJSON("content/navigation.json");
+    state.home = { data: home.json, sha: home.sha };
+    state.nav = { data: nav.json, sha: nav.sha };
+    fillHome();
+    fillNav();
+    fillParentsSelect();
+    document.getElementById("panelContent").style.display = "block";
+    setStatus("Подключено");
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка подключения. Проверьте реквизиты и наличие контента в репозитории.");
+  }
+}
+
+function fillHome() {
+  document.getElementById("homeTitle").value = state.home.data.title || "";
+  document.getElementById("homeLead").value = state.home.data.lead || "";
+  document.getElementById("homeImages").value = (state.home.data.images || []).join("\n");
+}
+
+function fillNav() {
+  const root = document.getElementById("navEditor");
+  root.innerHTML = "";
+  (state.nav.data.parents || []).forEach((p, idx) => {
+    const box = el("div", { class: "item" }, [
+      el("div", { class: "row" }, [
+        el("label", {}, "ID (men/women и т.п.)"),
+        el("input", { type: "text", value: p.id, "data-idx": idx, "data-f": "id" })
+      ]),
+      el("div", { class: "row" }, [
+        el("label", {}, "Заголовок"),
+        el("input", { type: "text", value: p.title || "", "data-idx": idx, "data-f": "title" })
+      ]),
+      el("div", {}, [
+        el("div", { class: "muted" }, "Подразделы:"),
+        el("div", {}, (p.children || []).map((c, cidx) => {
+          const wrap = el("div", { class: "cols-2" }, [
+            el("input", { type: "text", value: c.slug, "data-idx": idx, "data-cidx": cidx, "data-f": "slug" }),
+            el("input", { type: "text", value: c.title || "", "data-idx": idx, "data-cidx": cidx, "data-f": "title" })
+          ]);
+          return wrap;
+        })),
+        el("button", { class: "btn secondary", onclick: () => { p.children = p.children || []; p.children.push({ slug: "new", title: "новая" }); fillNav(); } }, "Добавить подраздел")
+      ]),
+      el("div", { style: "margin-top:10px" }, [
+        el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.splice(idx, 1); fillNav(); } }, "Удалить раздел")
+      ])
+    ]);
+    root.appendChild(box);
+  });
+  root.appendChild(el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.push({ id: "new", title: "Новый", children: [] }); fillNav(); } }, "Добавить раздел"));
+
+  root.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const idx = +inp.getAttribute("data-idx");
+      const cidx = inp.getAttribute("data-cidx");
+      const f = inp.getAttribute("data-f");
+      if (cidx === null) {
+        state.nav.data.parents[idx][f] = inp.value;
+      } else {
+        state.nav.data.parents[idx].children[cidx][f] = inp.value;
+      }
+    });
+  });
+}
+
+function fillParentsSelect() {
+  const sel = document.getElementById("catParent");
+  sel.innerHTML = "";
+  (state.nav.data.parents || []).forEach(p => {
+    sel.appendChild(el("option", { value: p.id, text: p.title || p.id }));
+  });
+}
+
+async function saveHome() {
+  state.home.data.title = document.getElementById("homeTitle").value.trim();
+  state.home.data.lead = document.getElementById("homeLead").value.trim();
+  state.home.data.images = document.getElementById("homeImages").value.split("\n").map(s => s.trim()).filter(Boolean);
+
+  try {
+    await api.putJSON("content/home.json", state.home.data, state.home.sha, "Update home.json");
+    setStatus("Главная сохранена");
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка сохранения главной");
+  }
+}
+
+async function saveNav() {
+  try {
+    await api.putJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json");
+    setStatus("Меню сохранено");
+    fillParentsSelect();
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка сохранения меню");
+  }
+}
+
+async function loadCategory() {
+  const parent = document.getElementById("catParent").value.trim();
+  const slug = document.getElementById("catSlug").value.trim();
+  if (!parent || !slug) return;
+  const path = `content/categories/${parent}-${slug}.json`;
+  try {
+    const { json, sha } = await api.getJSON(path);
+    state.cat = { path, data: json, sha };
+  } catch {
+    // файл не существует — создаём заготовку
+    state.cat = {
+      path,
+      data: {
+        parentId: parent,
+        slug,
+        slugTitle: slug,
+        title: "",
+        description: "",
+        grid: { columns: 3, gap: "24px" },
+        items: []
+      },
+      sha: undefined
+    };
+  }
+  fillCatForm();
+}
+
+function fillCatForm() {
+  const d = state.cat.data;
+  document.getElementById("catTitle").value = d.title || "";
+  document.getElementById("catDesc").value = d.description || "";
+  document.getElementById("catCols").value = (d.grid && d.grid.columns) || 3;
+  document.getElementById("catGap").value = (d.grid && d.grid.gap) || "24px";
+  state.items = (d.items || []).slice();
+  renderItems();
+}
+
+function renderItems() {
+  const wrap = document.getElementById("items");
+  wrap.innerHTML = "";
+  state.items.forEach((it, idx) => {
+    const box = el("div", { class: "item" }, [
+      el("div", { class: "row" }, [ el("label", {}, "Изображение (URL)"), el("input", { type: "url", value: it.image || "", "data-idx": idx, "data-f": "image" }) ]),
+      el("div", { class: "row" }, [ el("label", {}, "Подпись"), el("input", { type: "text", value: it.caption || "", "data-idx": idx, "data-f": "caption" }) ]),
+      el("div", { class: "row" }, [ el("label", {}, "Ссылка"), el("input", { type: "url", value: it.link || "", "data-idx": idx, "data-f": "link" }) ]),
+      el("div", {}, el("button", { class: "btn secondary", onclick: () => { state.items.splice(idx, 1); renderItems(); } }, "Удалить"))
+    ]);
+    wrap.appendChild(box);
+  });
+  wrap.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const idx = +inp.getAttribute("data-idx");
+      const f = inp.getAttribute("data-f");
+      state.items[idx][f] = inp.value;
+    });
+  });
+}
+
+async function saveCat() {
+  const d = state.cat.data;
+  d.title = document.getElementById("catTitle").value.trim();
+  d.description = document.getElementById("catDesc").value.trim();
+  d.grid = {
+    columns: parseInt(document.getElementById("catCols").value, 10) || 3,
+    gap: document.getElementById("catGap").value.trim() || "24px"
+  };
+  d.items = state.items;
+
+  try {
+    const txt = JSON.stringify(d, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(txt)));
+    await api.put(state.cat.path, b64, state.cat.sha, `Update ${state.cat.path}`);
+    setStatus("Страница подраздела сохранена");
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка сохранения страницы");
+  }
+}
+
+async function uploadToAssets(inputEl, subfolder, onDone) {
+  const f = inputEl.files?.[0];
+  if (!f) return;
+  const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const dest = `assets/img/${subfolder}/${Date.now()}-${safeName}`;
+  try {
+    await api.uploadFile(dest, f);
+    const rel = dest; // относительный путь для сайта
+    onDone(rel);
+    setStatus(`Загружено: ${rel}`);
+    inputEl.value = "";
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка загрузки файла");
+  }
+}
+
+function bind() {
+  document.getElementById("connectBtn").addEventListener("click", connect);
+  document.getElementById("saveHome").addEventListener("click", saveHome);
+  document.getElementById("saveNav").addEventListener("click", saveNav);
+
+  document.getElementById("catParent").addEventListener("change", loadCategory);
+  document.getElementById("catSlug").addEventListener("change", loadCategory);
+  document.getElementById("saveCat").addEventListener("click", saveCat);
+  document.getElementById("addItem").addEventListener("click", () => {
+    state.items.push({ image: "", caption: "", link: "", target: "_blank" });
+    renderItems();
+  });
+
+  document.getElementById("homeUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => {
+      const ta = document.getElementById("homeImages");
+      const v = ta.value.trim();
+      ta.value = v ? (v + "\n" + rel) : rel;
+    });
+  });
+
+  document.getElementById("catUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => {
+      state.items.push({ image: rel, caption: "", link: "", target: "_blank" });
+      renderItems();
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", bind);
