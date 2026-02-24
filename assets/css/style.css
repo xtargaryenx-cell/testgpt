@@ -1,8 +1,8 @@
 :root {
-  --bg: #fff;
-  --fg: #111;
-  --muted: #666;
-  --accent: #111;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --accent: #111111;
   --gap: 24px;
   --container: 1200px;
   --container-narrow: 900px;
@@ -12,9 +12,9 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+/* Base */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: var(--font); }
-
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; height: auto; display: block; }
 
@@ -25,8 +25,9 @@ img { max-width: 100%; height: auto; display: block; }
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
   display: grid; grid-template-columns: 72px 1fr 72px; align-items: center;
-  background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; z-index: 1000;
+  padding: 0;
 }
 
 /* Кнопка меню — слева, с отступом */
@@ -40,6 +41,7 @@ img { max-width: 100%; height: auto; display: block; }
   display: block; width: 22px; height: 2px; background: var(--fg);
   margin: 3px 0; transition: transform .3s, opacity .3s;
 }
+.menu-toggle:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
 
 /* Логотип — по центру на всех ширинах */
 .brand {
@@ -49,8 +51,7 @@ img { max-width: 100%; height: auto; display: block; }
 .logo { display: inline-block; }
 .logo-img {
   display: block; height: 28px; width: auto; object-fit: contain;
-  /* защита от переполнения на очень узких экранах */
-  max-width: min(60vw, 260px);
+  max-width: min(60vw, 260px); /* защита от переполнения на узких экранах */
 }
 
 /* Пустая правая колонка — симметрия для центровки */
@@ -61,32 +62,10 @@ img { max-width: 100%; height: auto; display: block; }
   .logo-img { height: 32px; max-width: none; }
 }
 
-/* Пустая колонка справа — «балансир» для точного центрирования на десктопе */
-.header-spacer { grid-column: 3; }
-
-/* Десктоп ≥1024px: логотип строго по центру */
-@media (min-width: 1024px) {
-  .brand { justify-self: center; padding-left: 0; }
-  .logo-img { height: 32px; }
-  .menu-toggle { margin-left: 16px; } /* удобный отступ от левого края */
-}
-
-/* Чтобы оверлей-меню перекрывало шапку (если нужно) */
-.overlay-menu { z-index: 1500; }
-
-/* Десктоп: логотип строго по центру, бургер остаётся слева на 36px */
-@media (min-width: 1024px) {
-  .brand {
-    left: 50%; transform: translate(-50%, -50%);
-  }
-  .logo-img { height: 32px; }
-  .menu-toggle { left: 36px; }
-}
-
 /* Overlay menu */
 .overlay-menu {
   position: fixed; inset: 0; background: #fff; transform: translateY(-100%);
-  transition: transform .35s ease; z-index: 999;
+  transition: transform .35s ease; z-index: 1500;
   border-bottom: 1px solid #eee;
 }
 .overlay-menu.open { transform: translateY(0); }
@@ -96,15 +75,11 @@ img { max-width: 100%; height: auto; display: block; }
 .menu-parent { font-weight: 700; color: var(--fg); }
 .menu-children { margin: 6px 0 14px 0; display: flex; flex-wrap: wrap; gap: 16px; }
 .menu-children a { color: var(--muted); border-bottom: 1px solid transparent; }
-.menu-children a:hover { border-color: var(--fg); }
+.menu-children a:hover, .menu-children a:focus-visible { border-color: var(--fg); }
 
 /* Home */
-.hero {
-  margin-top: 20px;
-}
-.hero h1 {
-  font-size: 36px; margin: 0 0 12px 0; letter-spacing: 0.02em;
-}
+.hero { margin-top: 20px; }
+.hero h1 { font-size: 36px; margin: 0 0 12px 0; letter-spacing: 0.02em; }
 .hero p.lead { color: var(--muted); margin: 0 0 24px 0; line-height: 1.6; }
 .hero-images { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
 @media (min-width: 900px) {
@@ -115,6 +90,7 @@ img { max-width: 100%; height: auto; display: block; }
 .category-header { margin: 10px 0 22px; }
 .category-header h1 { font-size: 28px; margin: 0 0 10px; }
 .category-header p { color: var(--muted); margin: 0; line-height: 1.6; }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
@@ -132,3 +108,6 @@ img { max-width: 100%; height: auto; display: block; }
 .site-footer {
   border-top: 1px solid #eee; padding: 24px 20px; text-align: center; color: var(--muted);
 }
+
+/* Misc */
+a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
