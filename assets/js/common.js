@@ -5,74 +5,106 @@ async function fetchJSON(path) {
 }
 
 function qs(sel, root = document) { return root.querySelector(sel); }
-function qsa(sel, root = document) { return [...root.querySelectorAll(sel)]; }
+
+function setViewportVar() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+
+function isMobile() {
+  return window.matchMedia("(max-width: 1023.98px)").matches;
+}
 
 function toggleMenu(open) {
   const menu = qs("#overlayMenu");
   if (!menu) return;
-  if (typeof open === "boolean") {
-    menu.classList.toggle("open", open);
-  } else {
-    menu.classList.toggle("open");
+
+  const willOpen = typeof open === "boolean" ? open : !menu.classList.contains("open");
+  menu.classList.toggle("open", willOpen);
+  menu.setAttribute("aria-hidden", willOpen ? "false" : "true");
+
+  // Блокируем фон только на мобильном фуллскрине
+  const lock = willOpen && isMobile();
+  document.body.classList.toggle("menu-open", lock);
+  document.documentElement.classList.toggle("menu-open", lock);
+
+  if (willOpen) setViewportVar();
+}
+
+function makeColumn(parent) {
+  if (!parent) return "";
+  const children = (parent.children || []).map(c => {
+    const href = `category.html?parent=${encodeURIComponent(parent.id)}&slug=${encodeURIComponent(c.slug)}`;
+    return `<a href="${href}">${c.title || c.slug}</a>`;
+  }).join("");
+  return `
+    <div class="menu-col">
+      <div class="menu-parent">${parent.title || parent.id}</div>
+      <div class="menu-children">${children}</div>
+    </div>
+  `;
+}
+
+function buildMenuLayout(nav) {
+  const root = qs("#overlayContent");
+  if (!root) return;
+
+  const parents = nav.parents || [];
+  const women = parents.find(p => (p.id || "").toLowerCase() === "women") || parents[0];
+  const men   = parents.find(p => (p.id || "").toLowerCase() === "men")   || parents[1];
+
+  const promo = nav.menuPromo || {};
+  const wPromo = promo.women || {};
+  const mPromo = promo.men || {};
+
+  function fallbackLink(parent) {
+    if (!parent || !parent.children || !parent.children.length) return "#";
+    const c = parent.children[0];
+    return `category.html?parent=${encodeURIComponent(parent.id)}&slug=${encodeURIComponent(c.slug)}`;
   }
-  menu.setAttribute("aria-hidden", menu.classList.contains("open") ? "false" : "true");
+
+  const wHref = wPromo.link || fallbackLink(women);
+  const mHref = mPromo.link || fallbackLink(men);
+
+  const wImg = wPromo.image ? `<a class="promo" href="${wHref}"><img src="${wPromo.image}" alt="Женская обувь"></a>` : "";
+  const mImg = mPromo.image ? `<a class="promo" href="${mHref}"><img src="${mPromo.image}" alt="Мужская обувь"></a>` : "";
+
+  root.innerHTML = `
+    <div class="menu-home"><a href="./">Главная</a></div>
+    <div class="menu-grid">
+      ${makeColumn(women)}
+      ${makeColumn(men)}
+      <div class="menu-promos">
+        ${wImg}
+        ${mImg}
+      </div>
+    </div>
+  `;
+}
+
+async function buildMenu() {
+  try {
+    const nav = await fetchJSON("content/navigation.json");
+    buildMenuLayout(nav);
+  } catch (e) {
+    console.error("Не удалось загрузить меню:", e);
+  }
 }
 
 function initMenu() {
   const btn = qs(".menu-toggle");
   if (btn) btn.addEventListener("click", () => toggleMenu());
 
-  // Закрытие по Esc или клику вне
+  qs("#menuCloseBtn")?.addEventListener("click", () => toggleMenu(false));
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") toggleMenu(false);
   });
-  qs("#overlayMenu")?.addEventListener("click", (e) => {
-    if (e.target.id === "overlayMenu") toggleMenu(false);
-  });
 
-  // Загрузка меню из content/navigation.json
+  setViewportVar();
+  window.addEventListener("resize", setViewportVar);
+
   buildMenu();
-}
-
-async function buildMenu() {
-  try {
-    const nav = await fetchJSON("content/navigation.json");
-    const ul = qs("#menuList");
-    if (!ul) return;
-    ul.innerHTML = "";
-
-    // Главная
-    const homeLi = document.createElement("li");
-    const homeA = document.createElement("a");
-    homeA.href = "./";
-    homeA.textContent = "Главная";
-    homeLi.appendChild(homeA);
-    ul.appendChild(homeLi);
-
-    // Родительские разделы
-    (nav.parents || []).forEach((p) => {
-      const li = document.createElement("li");
-      const parent = document.createElement("div");
-      parent.className = "menu-parent";
-      parent.textContent = p.title || p.id;
-      li.appendChild(parent);
-
-      const children = document.createElement("div");
-      children.className = "menu-children";
-
-      (p.children || []).forEach((c) => {
-        const a = document.createElement("a");
-        a.textContent = c.title || c.slug;
-        a.href = `category.html?parent=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(c.slug)}`;
-        children.appendChild(a);
-      });
-
-      li.appendChild(children);
-      ul.appendChild(li);
-    });
-  } catch (e) {
-    console.error("Не удалось загрузить меню:", e);
-  }
 }
 
 document.addEventListener("DOMContentLoaded", initMenu);
