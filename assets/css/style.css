@@ -25,13 +25,12 @@ img { max-width: 100%; height: auto; display: block; }
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
   display: grid; grid-template-columns: 72px 1fr 72px;
-  align-items: center; /* центровка по вертикали всех ячеек */
+  align-items: center;
   background: rgba(255,255,255,0.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; z-index: 1000;
   padding: 0;
 }
 
-/* Кнопка меню — слева, с отступом, по центру по вертикали */
 .menu-toggle {
   grid-column: 1; justify-self: start; align-self: center;
   margin-left: 16px;
@@ -44,11 +43,10 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .menu-toggle:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
 
-/* Центральная колонка: логотип всегда по центру и по вертикали, без наложений */
 .brand {
   grid-column: 2;
   display: flex; align-items: center; justify-content: center;
-  align-self: stretch; /* растягиваем ячейку на полную высоту хэдера */
+  align-self: stretch;
 }
 .logo {
   display: inline-flex; align-items: center; justify-content: center;
@@ -56,11 +54,10 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .logo-img {
   display: block; width: auto; object-fit: contain;
-  height: 28px; /* мобильная/узкая ширина */
-  max-width: min(60vw, 260px); /* защита от переполнения на узких экранах */
+  height: 28px;
+  max-width: min(60vw, 260px);
 }
 
-/* Правая колонка — «балансир» для симметрии и точной центровки */
 .header-spacer { grid-column: 3; }
 
 /* Десктоп ≥1024px: слегка увеличиваем логотип */
@@ -68,7 +65,7 @@ img { max-width: 100%; height: auto; display: block; }
   .logo-img { height: 32px; max-width: none; }
 }
 
-/* === Overlay menu — десктопная «полоса» 38vh + мобильный фуллскрин === */
+/* === Overlay menu — десктоп: полоса 50vh, мобильный: фуллскрин === */
 .overlay-menu {
   position: fixed; left: 0; right: 0; top: 0;
   background: #fff;
@@ -78,15 +75,12 @@ img { max-width: 100%; height: auto; display: block; }
   z-index: 2000;
   border-bottom: 1px solid #eee;
 }
-
-/* Высота: десктоп — «полоса» 38vh (с ограничениями) */
 @media (min-width: 1024px) {
   .overlay-menu {
-    height: clamp(280px, 38vh, 520px);
+    height: clamp(280px, 50vh, 520px); /* Было 38vh — стало 50vh */
     overflow: visible;
   }
 }
-/* Мобильный — на весь экран */
 @media (max-width: 1023.98px) {
   .overlay-menu {
     height: 100dvh;
@@ -95,10 +89,8 @@ img { max-width: 100%; height: auto; display: block; }
     overflow: hidden;
   }
 }
-
 .overlay-menu.open { transform: translateY(0); opacity: 1; }
 
-/* Шапка меню с крестиком */
 .overlay-head { position: relative; height: 64px; }
 .menu-close {
   position: absolute; top: 14px; left: 24px;
@@ -111,49 +103,65 @@ img { max-width: 100%; height: auto; display: block; }
 .menu-close span:first-child { transform: rotate(45deg); }
 .menu-close span:last-child  { transform: rotate(-45deg); }
 .menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-
-/* Контент меню */
 .overlay-inner {
   max-width: 1200px;
   margin: 0 auto;
   padding: 8px 20px 24px;
 }
 
-/* Заголовок «Главная» */
-.menu-home { margin-bottom: 10px; }
-.menu-home a { font-weight: 600; border-bottom: 1px solid transparent; }
-.menu-home a:hover, .menu-home a:focus-visible { border-color: #111; }
+/* Убираем подчеркивание у ссылок в меню */
+.menu-children a,
+.menu-home a {
+  color: var(--muted);
+  border-bottom: none !important;
+  text-decoration: none;
+}
+.menu-children a:hover,
+.menu-children a:focus-visible,
+.menu-home a:hover,
+.menu-home a:focus-visible {
+  color: var(--accent);
+  border: none !important;
+  text-decoration: none;
+}
 
 /* Сетка: две колонки разделов + правая колонка с промо-картинками */
 .menu-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Женская | Мужская | Промо */
-  gap: 32px;
+  gap: 16px;  /* Было 32px — теперь 16px */
   align-items: start;
 }
-
-/* Колонки разделов */
 .menu-col .menu-parent { font-weight: 700; margin-bottom: 8px; }
 .menu-col .menu-children { display: grid; gap: 6px; padding-left: 12px; }
-.menu-col .menu-children a { color: var(--muted); border-bottom: 1px solid transparent; }
-.menu-col .menu-children a:hover, .menu-col .menu-children a:focus-visible { border-color: #111; }
+.menu-col .menu-children a { color: var(--muted); }
+.menu-col .menu-children a:hover, .menu-col .menu-children a:focus-visible { color: var(--accent); }
 
-/* Правая колонка — промо */
-.menu-promos { display: grid; gap: 16px; }
-.menu-promos .promo { display: block; }
+.menu-home { margin-bottom: 10px; }
+
+.menu-promos { display: grid; gap: 16px; justify-items: center; }
 .menu-promos .promo img {
-  width: 100%; height: auto; display: block; border: 1px solid #eee; object-fit: cover;
+  width: 190px;
+  max-width: 100%;
+  height: auto;
   aspect-ratio: 4/5;
+  border: 1px solid #eee;
+  object-fit: cover;
 }
 
-/* Мобильная раскладка: фуллскрин, центрирование, промо под колонками */
+/* Мобильный режим: колонки по центру, промо меньше и под колонками */
 @media (max-width: 1023.98px) {
   .overlay-inner { height: calc(100% - 64px); overflow: auto; padding-bottom: 32px; }
   .menu-grid { grid-template-columns: 1fr; gap: 20px; justify-items: center; }
   .menu-col { width: min(480px, 90%); }
-  .menu-promos { width: min(480px, 90%); grid-template-columns: 1fr 1fr; gap: 12px; }
+  .menu-promos { width: min(480px, 90%); grid-template-columns: 1fr 1fr; gap: 10px; }
+  .menu-promos .promo img {
+    width: 140px;
+    max-width: 100%;
+  }
   @media (max-width: 420px) {
     .menu-promos { grid-template-columns: 1fr; }
+    .menu-promos .promo img { width: 90vw; }
   }
 }
 
