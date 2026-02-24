@@ -3,10 +3,16 @@ const state = {
   home: null, nav: null, cat: null, items: []
 };
 
+const GH_HEADERS = () => ({
+  Authorization: `token ${state.token}`,
+  Accept: "application/vnd.github+json",
+  "X-GitHub-Api-Version": "2022-11-28"
+});
+
 const api = {
   async get(path) {
     const r = await fetch(`https://api.github.com/repos/${state.owner}/${state.repo}/contents/${path}?ref=${state.branch}`, {
-      headers: { Authorization: `token ${state.token}` }
+      headers: GH_HEADERS()
     });
     if (!r.ok) throw new Error(await r.text());
     return r.json();
@@ -14,7 +20,7 @@ const api = {
   async put(path, contentBase64, sha, message) {
     const r = await fetch(`https://api.github.com/repos/${state.owner}/${state.repo}/contents/${path}`, {
       method: "PUT",
-      headers: { Authorization: `token ${state.token}`, "Content-Type": "application/json" },
+      headers: { ...GH_HEADERS(), "Content-Type": "application/json" },
       body: JSON.stringify({
         message: message || `Update ${path}`,
         content: contentBase64,
@@ -41,27 +47,56 @@ const api = {
   },
   async uploadFile(destPath, file) {
     const arrayBuf = await file.arrayBuffer();
-    const b64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuf)));
-    // no sha for new file
+    const b64 = base64FromArrayBuffer(arrayBuf); // устойчиво к большим файлам
     return this.put(destPath, b64, undefined, `Upload ${destPath}`);
   }
 };
 
+// Надёжное кодирование ArrayBuffer -> base64 (чтобы не упасть на больших файлах)
+function base64FromArrayBuffer(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const chunk = 0x8000; // ~32KB
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+
+// Утилиты DOM
 function el(tag, props = {}, children = []) {
   const e = document.createElement(tag);
   Object.entries(props).forEach(([k, v]) => {
     if (k === "class") e.className = v;
     else if (k === "text") e.textContent = v;
+    else if (k === "style" && typeof v === "object") Object.assign(e.style, v);
+    else if (k.startsWith("on") && typeof v === "function") e[k] = v; // ВАЖНО: события как свойства
     else e.setAttribute(k, v);
   });
   (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return;
     if (typeof c === "string") e.appendChild(document.createTextNode(c));
-    else if (c) e.appendChild(c);
+    else e.appendChild(c);
   });
   return e;
 }
 
 function setStatus(msg) { document.getElementById("status").textContent = msg; }
+
+// Безопасное сохранение JSON с автоподтягиванием sha на случай гонок
+async function safePutJSON(path, obj, currentSha, msg) {
+  try {
+    const res = await api.putJSON(path, obj, currentSha, msg);
+    return res;
+  } catch (e) {
+    const s = String(e);
+    if (s.includes("sha") || s.includes("does not match")) {
+      const { sha } = await api.getText(path);
+      return api.putJSON(path, obj, sha, msg);
+    }
+    throw e;
+  }
+}
 
 async function connect() {
   state.owner = document.getElementById("ghOwner").value.trim();
@@ -75,7 +110,6 @@ async function connect() {
   }
   setStatus("Проверка репозитория...");
   try {
-    // пробуем прочитать файлы
     const home = await api.getJSON("content/home.json");
     const nav = await api.getJSON("content/navigation.json");
     state.home = { data: home.json, sha: home.sha };
@@ -100,7 +134,23 @@ function fillHome() {
 function fillNav() {
   const root = document.getElementById("navEditor");
   root.innerHTML = "";
+
   (state.nav.data.parents || []).forEach((p, idx) => {
+    const childrenBox = el("div", {}, (p.children || []).map((c, cidx) => {
+      return el("div", { class: "item" }, [
+        el("div", { class: "cols-2" }, [
+          el("input", { type: "text", value: c.slug, "data-idx": idx, "data-cidx": cidx, "data-f": "slug" }),
+          el("input", { type: "text", value: c.title || "", "data-idx": idx, "data-cidx": cidx, "data-f": "title" })
+        ]),
+        el("div", { style: "margin-top:6px" }, [
+          el("button", {
+            class: "btn secondary",
+            onclick: () => { p.children.splice(cidx, 1); fillNav(); }
+          }, "Удалить подраздел")
+        ])
+      ]);
+    }));
+
     const box = el("div", { class: "item" }, [
       el("div", { class: "row" }, [
         el("label", {}, "ID (men/women и т.п.)"),
@@ -112,31 +162,35 @@ function fillNav() {
       ]),
       el("div", {}, [
         el("div", { class: "muted" }, "Подразделы:"),
-        el("div", {}, (p.children || []).map((c, cidx) => {
-          const wrap = el("div", { class: "cols-2" }, [
-            el("input", { type: "text", value: c.slug, "data-idx": idx, "data-cidx": cidx, "data-f": "slug" }),
-            el("input", { type: "text", value: c.title || "", "data-idx": idx, "data-cidx": cidx, "data-f": "title" })
-          ]);
-          return wrap;
-        })),
-        el("button", { class: "btn secondary", onclick: () => { p.children = p.children || []; p.children.push({ slug: "new", title: "новая" }); fillNav(); } }, "Добавить подраздел")
+        childrenBox,
+        el("button", {
+          class: "btn secondary",
+          onclick: () => { p.children = p.children || []; p.children.push({ slug: "new", title: "новая" }); fillNav(); }
+        }, "Добавить подраздел")
       ]),
       el("div", { style: "margin-top:10px" }, [
         el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.splice(idx, 1); fillNav(); } }, "Удалить раздел")
       ])
     ]);
+
     root.appendChild(box);
   });
-  root.appendChild(el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.push({ id: "new", title: "Новый", children: [] }); fillNav(); } }, "Добавить раздел"));
 
+  root.appendChild(el("button", {
+    class: "btn secondary",
+    onclick: () => { state.nav.data.parents.push({ id: "new", title: "Новый", children: [] }); fillNav(); }
+  }, "Добавить раздел"));
+
+  // связываем инпуты с моделью
   root.querySelectorAll("input").forEach(inp => {
     inp.addEventListener("input", () => {
       const idx = +inp.getAttribute("data-idx");
-      const cidx = inp.getAttribute("data-cidx");
+      const cidxAttr = inp.getAttribute("data-cidx");
       const f = inp.getAttribute("data-f");
-      if (cidx === null) {
+      if (cidxAttr === null) {
         state.nav.data.parents[idx][f] = inp.value;
       } else {
+        const cidx = +cidxAttr;
         state.nav.data.parents[idx].children[cidx][f] = inp.value;
       }
     });
@@ -157,7 +211,8 @@ async function saveHome() {
   state.home.data.images = document.getElementById("homeImages").value.split("\n").map(s => s.trim()).filter(Boolean);
 
   try {
-    await api.putJSON("content/home.json", state.home.data, state.home.sha, "Update home.json");
+    const res = await safePutJSON("content/home.json", state.home.data, state.home.sha, "Update home.json");
+    state.home.sha = res.content.sha; // обновляем sha
     setStatus("Главная сохранена");
   } catch (e) {
     console.error(e);
@@ -167,7 +222,8 @@ async function saveHome() {
 
 async function saveNav() {
   try {
-    await api.putJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json");
+    const res = await safePutJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json");
+    state.nav.sha = res.content.sha; // обновляем sha
     setStatus("Меню сохранено");
     fillParentsSelect();
   } catch (e) {
@@ -185,7 +241,6 @@ async function loadCategory() {
     const { json, sha } = await api.getJSON(path);
     state.cat = { path, data: json, sha };
   } catch {
-    // файл не существует — создаём заготовку
     state.cat = {
       path,
       data: {
@@ -235,6 +290,10 @@ function renderItems() {
 }
 
 async function saveCat() {
+  if (!state.cat) {
+    setStatus("Выберите родителя и slug категории");
+    return;
+  }
   const d = state.cat.data;
   d.title = document.getElementById("catTitle").value.trim();
   d.description = document.getElementById("catDesc").value.trim();
@@ -247,7 +306,21 @@ async function saveCat() {
   try {
     const txt = JSON.stringify(d, null, 2);
     const b64 = btoa(unescape(encodeURIComponent(txt)));
-    await api.put(state.cat.path, b64, state.cat.sha, `Update ${state.cat.path}`);
+    // пробуем сохранить с текущим sha
+    let res;
+    try {
+      res = await api.put(state.cat.path, b64, state.cat.sha, `Update ${state.cat.path}`);
+    } catch (e) {
+      const s = String(e);
+      if (s.includes("sha") || s.includes("does not match")) {
+        const latest = await api.getText(state.cat.path).catch(() => null);
+        const latestSha = latest?.sha;
+        res = await api.put(state.cat.path, b64, latestSha, `Update ${state.cat.path}`);
+      } else {
+        throw e;
+      }
+    }
+    state.cat.sha = res.content.sha; // обновляем sha
     setStatus("Страница подраздела сохранена");
   } catch (e) {
     console.error(e);
@@ -261,7 +334,7 @@ async function uploadToAssets(inputEl, subfolder, onDone) {
   const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const dest = `assets/img/${subfolder}/${Date.now()}-${safeName}`;
   try {
-    await api.uploadFile(dest, f);
+    const res = await api.uploadFile(dest, f);
     const rel = dest; // относительный путь для сайта
     onDone(rel);
     setStatus(`Загружено: ${rel}`);
