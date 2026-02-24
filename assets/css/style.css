@@ -24,19 +24,39 @@ img { max-width: 100%; height: auto; display: block; }
 /* Header */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px; background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; z-index: 1000;
+  /* больше не используем flex — позиционируем элементы абсолютно */
 }
-.logo { letter-spacing: 0.2em; font-weight: 700; }
 
-/* Menu toggle (hamburger) */
+/* Кнопка меню — слева, но не в самом углу */
 .menu-toggle {
-  background: transparent; border: 0; width: 40px; height: 40px; cursor: pointer; position: relative;
+  position: absolute; top: 50%; left: 36px; transform: translateY(-50%);
+  background: transparent; border: 0; width: 40px; height: 40px; cursor: pointer;
   display: grid; place-items: center;
 }
 .menu-toggle span {
-  display: block; width: 22px; height: 2px; background: var(--fg); margin: 3px 0; transition: transform .3s, opacity .3s;
+  display: block; width: 22px; height: 2px; background: var(--fg); margin: 3px 0;
+  transition: transform .3s, opacity .3s;
+}
+
+/* Логотип */
+.brand {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  left: 20px; /* по умолчанию (мобайл) логотип слева */
+}
+.logo { display: inline-block; }
+.logo-img {
+  display: block; height: 28px; width: auto; object-fit: contain;
+}
+
+/* Десктоп: логотип строго по центру, бургер остаётся слева на 36px */
+@media (min-width: 1024px) {
+  .brand {
+    left: 50%; transform: translate(-50%, -50%);
+  }
+  .logo-img { height: 32px; }
+  .menu-toggle { left: 36px; }
 }
 
 /* Overlay menu */
