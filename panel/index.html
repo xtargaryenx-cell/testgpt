@@ -2,15 +2,17 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <!-- Favicon -->
-<link rel="icon" type="image/png" href="assets/icons/favicon.png" sizes="144x144">
-<link rel="icon" type="image/png" href="assets/icons/favicon-32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="assets/icons/favicon-16.png" sizes="16x16">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
-<link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#111111">
   <title>Minnori — Панель</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111111">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../assets/icons/favicon.png" sizes="144x144">
+  <link rel="icon" type="image/png" href="../assets/icons/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../assets/icons/favicon-16.png" sizes="16x16">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
   <link href="../assets/css/style.css" rel="stylesheet" />
   <style>
     .panel { max-width: 1000px; margin: 80px auto; padding: 0 20px; }
@@ -18,8 +20,7 @@
     .row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: start; margin-bottom: 12px; }
     .row label { color: var(--muted); font-size: 14px; }
     input[type="text"], input[type="url"], input[type="number"], textarea {
-      width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px;
-      font: inherit;
+      width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font: inherit;
     }
     textarea { min-height: 100px; }
     .btn { display: inline-block; padding: 10px 14px; border: 1px solid #111; background: #111; color: #fff; cursor: pointer; border-radius: 4px; }
@@ -32,16 +33,8 @@
 </head>
 <body>
 <header class="site-header">
-  <button class="menu-toggle" aria-label="Открыть меню">
-    <span></span><span></span><span></span>
-  </button>
-
-  <div class="brand">
-    <a href="../" class="logo" aria-label="Minnori">
-      <img src="../assets/img/logo.png" alt="Minnori" class="logo-img">
-    </a>
-  </div>
-
+  <button class="menu-toggle" aria-label="Меню" style="visibility:hidden"><span></span><span></span><span></span></button>
+  <div class="brand"><a href="../" class="logo"><img src="../assets/img/logo.png" alt="Minnori" class="logo-img"></a></div>
   <div class="header-spacer" aria-hidden="true"></div>
 </header>
 
@@ -70,9 +63,47 @@
 
     <div class="card-panel">
       <h2>Меню (навигация)</h2>
-      <div class="muted">Редактируйте разделы и подразделы. Сохраняйте, затем редактируйте соответствующие страницы категорий ниже.</div>
+      <div class="muted">Редактируйте разделы и подразделы. Сохраните изменения.</div>
       <div id="navEditor"></div>
       <button class="btn" id="saveNav">Сохранить меню</button>
+    </div>
+
+    <div class="card-panel">
+      <h2>Промо в меню</h2>
+
+      <h3>Женская</h3>
+      <div class="cols-2">
+        <div>
+          <label>Изображение (URL)</label>
+          <input id="promoWomenImg" type="url" placeholder="assets/img/promo-women.jpg" />
+        </div>
+        <div>
+          <label>Ссылка</label>
+          <input id="promoWomenLink" type="url" placeholder="category.html?parent=women&slug=kedy" />
+        </div>
+      </div>
+      <div class="row">
+        <label>Загрузка изображения</label>
+        <input id="promoWomenUpload" type="file" accept="image/*" />
+      </div>
+
+      <h3>Мужская</h3>
+      <div class="cols-2">
+        <div>
+          <label>Изображение (URL)</label>
+          <input id="promoMenImg" type="url" placeholder="assets/img/promo-men.jpg" />
+        </div>
+        <div>
+          <label>Ссылка</label>
+          <input id="promoMenLink" type="url" placeholder="category.html?parent=men&slug=kedy" />
+        </div>
+      </div>
+      <div class="row">
+        <label>Загрузка изображения</label>
+        <input id="promoMenUpload" type="file" accept="image/*" />
+      </div>
+
+      <button class="btn" id="saveMenuPromo">Сохранить промо</button>
     </div>
 
     <div class="card-panel">
