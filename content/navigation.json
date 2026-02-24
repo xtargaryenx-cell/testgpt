@@ -4,20 +4,44 @@
       "id": "men",
       "title": "Мужская",
       "children": [
-        { "slug": "kedy", "title": "кеды" },
-        { "slug": "krossovki", "title": "кроссовки" },
-        { "slug": "tufli", "title": "туфли" },
-        { "slug": "botinki", "title": "ботинки" }
+        {
+          "slug": "kedy",
+          "title": "Кеды"
+        },
+        {
+          "slug": "krossovki",
+          "title": "Кроссовки"
+        },
+        {
+          "slug": "tufli",
+          "title": "Туфли"
+        },
+        {
+          "slug": "botinki",
+          "title": "Ботинки"
+        }
       ]
     },
     {
       "id": "women",
       "title": "Женская",
       "children": [
-        { "slug": "kedy", "title": "кеды" },
-        { "slug": "krossovki", "title": "кроссовки" },
-        { "slug": "tufli", "title": "туфли" },
-        { "slug": "botinki", "title": "ботинки" }
+        {
+          "slug": "kedy",
+          "title": "Кеды"
+        },
+        {
+          "slug": "krossovki",
+          "title": "Кроссовки"
+        },
+        {
+          "slug": "tufli",
+          "title": "Туфли"
+        },
+        {
+          "slug": "botinki",
+          "title": "Ботинки"
+        }
       ]
     }
   ]
