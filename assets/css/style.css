@@ -21,34 +21,47 @@ img { max-width: 100%; height: auto; display: block; }
 .container { max-width: var(--container); margin: 80px auto 64px; padding: 0 20px; }
 .container-narrow { max-width: var(--container-narrow); margin: 80px auto 64px; padding: 0 20px; }
 
-/* Header */
+/* Header (Grid, без наложений) */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
-  background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
+  display: grid; grid-template-columns: 72px 1fr 72px; align-items: center;
+  padding: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; z-index: 1000;
-  /* больше не используем flex — позиционируем элементы абсолютно */
 }
 
 /* Кнопка меню — слева, но не в самом углу */
 .menu-toggle {
-  position: absolute; top: 50%; left: 36px; transform: translateY(-50%);
-  background: transparent; border: 0; width: 40px; height: 40px; cursor: pointer;
+  grid-column: 1; justify-self: start;
+  margin-left: 16px;
+  width: 40px; height: 40px; background: transparent; border: 0; cursor: pointer;
   display: grid; place-items: center;
 }
 .menu-toggle span {
-  display: block; width: 22px; height: 2px; background: var(--fg); margin: 3px 0;
-  transition: transform .3s, opacity .3s;
+  display: block; width: 22px; height: 2px; background: var(--fg);
+  margin: 3px 0; transition: transform .3s, opacity .3s;
 }
 
 /* Логотип */
 .brand {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  left: 20px; /* по умолчанию (мобайл) логотип слева */
+  grid-column: 2; display: flex; align-items: center;
+  /* по умолчанию: на узких ширинах логотип прижат к началу центральной колонки (не наезжает на кнопку) */
+  justify-self: start; padding-left: 8px;
 }
 .logo { display: inline-block; }
-.logo-img {
-  display: block; height: 28px; width: auto; object-fit: contain;
+.logo-img { display: block; height: 28px; width: auto; object-fit: contain; }
+
+/* Пустая колонка справа — «балансир» для точного центрирования на десктопе */
+.header-spacer { grid-column: 3; }
+
+/* Десктоп ≥1024px: логотип строго по центру */
+@media (min-width: 1024px) {
+  .brand { justify-self: center; padding-left: 0; }
+  .logo-img { height: 32px; }
+  .menu-toggle { margin-left: 16px; } /* удобный отступ от левого края */
 }
+
+/* Чтобы оверлей-меню перекрывало шапку (если нужно) */
+.overlay-menu { z-index: 1500; }
 
 /* Десктоп: логотип строго по центру, бургер остаётся слева на 36px */
 @media (min-width: 1024px) {
