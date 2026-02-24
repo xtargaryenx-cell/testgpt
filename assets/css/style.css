@@ -68,20 +68,99 @@ img { max-width: 100%; height: auto; display: block; }
   .logo-img { height: 32px; max-width: none; }
 }
 
-/* === Overlay menu (верхнее выпадающее меню) === */
+/* === Overlay menu — десктопная «полоса» 38vh + мобильный фуллскрин === */
 .overlay-menu {
-  position: fixed; inset: 0; background: #fff; transform: translateY(-100%);
-  transition: transform .35s ease; z-index: 1500; /* выше, чем header */
+  position: fixed; left: 0; right: 0; top: 0;
+  background: #fff;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform .35s ease, opacity .2s ease;
+  z-index: 2000;
   border-bottom: 1px solid #eee;
 }
-.overlay-menu.open { transform: translateY(0); }
-.overlay-inner { max-width: 900px; margin: 100px auto; padding: 0 20px; }
-.overlay-inner ul { list-style: none; padding: 0; margin: 0; }
-.overlay-inner li { margin: 10px 0; }
-.menu-parent { font-weight: 700; color: var(--fg); }
-.menu-children { margin: 6px 0 14px 0; display: flex; flex-wrap: wrap; gap: 16px; }
-.menu-children a { color: var(--muted); border-bottom: 1px solid transparent; }
-.menu-children a:hover, .menu-children a:focus-visible { border-color: var(--fg); }
+
+/* Высота: десктоп — «полоса» 38vh (с ограничениями) */
+@media (min-width: 1024px) {
+  .overlay-menu {
+    height: clamp(280px, 38vh, 520px);
+    overflow: visible;
+  }
+}
+/* Мобильный — на весь экран */
+@media (max-width: 1023.98px) {
+  .overlay-menu {
+    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+}
+
+.overlay-menu.open { transform: translateY(0); opacity: 1; }
+
+/* Шапка меню с крестиком */
+.overlay-head { position: relative; height: 64px; }
+.menu-close {
+  position: absolute; top: 14px; left: 24px;
+  width: 36px; height: 36px; border: 1px solid #111; border-radius: 18px;
+  background: #fff; cursor: pointer; display: grid; place-items: center;
+}
+.menu-close span {
+  position: absolute; display: block; width: 18px; height: 2px; background: #111;
+}
+.menu-close span:first-child { transform: rotate(45deg); }
+.menu-close span:last-child  { transform: rotate(-45deg); }
+.menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+/* Контент меню */
+.overlay-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 20px 24px;
+}
+
+/* Заголовок «Главная» */
+.menu-home { margin-bottom: 10px; }
+.menu-home a { font-weight: 600; border-bottom: 1px solid transparent; }
+.menu-home a:hover, .menu-home a:focus-visible { border-color: #111; }
+
+/* Сетка: две колонки разделов + правая колонка с промо-картинками */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Женская | Мужская | Промо */
+  gap: 32px;
+  align-items: start;
+}
+
+/* Колонки разделов */
+.menu-col .menu-parent { font-weight: 700; margin-bottom: 8px; }
+.menu-col .menu-children { display: grid; gap: 6px; padding-left: 12px; }
+.menu-col .menu-children a { color: var(--muted); border-bottom: 1px solid transparent; }
+.menu-col .menu-children a:hover, .menu-col .menu-children a:focus-visible { border-color: #111; }
+
+/* Правая колонка — промо */
+.menu-promos { display: grid; gap: 16px; }
+.menu-promos .promo { display: block; }
+.menu-promos .promo img {
+  width: 100%; height: auto; display: block; border: 1px solid #eee; object-fit: cover;
+  aspect-ratio: 4/5;
+}
+
+/* Мобильная раскладка: фуллскрин, центрирование, промо под колонками */
+@media (max-width: 1023.98px) {
+  .overlay-inner { height: calc(100% - 64px); overflow: auto; padding-bottom: 32px; }
+  .menu-grid { grid-template-columns: 1fr; gap: 20px; justify-items: center; }
+  .menu-col { width: min(480px, 90%); }
+  .menu-promos { width: min(480px, 90%); grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 420px) {
+    .menu-promos { grid-template-columns: 1fr; }
+  }
+}
+
+/* Блокировка скролла фона — только на мобильном фуллскрине */
+@media (max-width: 1023.98px) {
+  html.menu-open, body.menu-open { overflow: hidden; height: 100%; touch-action: none; }
+}
 
 /* === Home (главная) === */
 .hero { margin-top: 20px; }
