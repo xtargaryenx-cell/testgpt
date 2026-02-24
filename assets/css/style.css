@@ -222,3 +222,43 @@ a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
   .menu-promos { width: 190px; justify-items: center; }
   .menu-promos .promo img { width: 190px; }
 }
+/* === Меню: 4 колонки на десктопе с фиксированными промежутками === */
+@media (min-width: 1024px) {
+  .menu-grid {
+    /* Женская | Мужская | Промо 1 | Промо 2 */
+    grid-template-columns: max-content max-content 239px 239px;
+    column-gap: 80px;   /* ровно 80px между всеми соседними колонками */
+    row-gap: 16px;
+    justify-content: start; /* прижимаем блок к левому краю контейнера */
+  }
+  .menu-col { width: auto; } /* ширина колонок под контент */
+
+  /* Отдельные промо-колонки */
+  .menu-promo { width: 239px; justify-self: start; }
+  .menu-promo .promo img {
+    width: 239px; height: auto; aspect-ratio: 4/5;
+    object-fit: cover; border: 1px solid #eee;
+  }
+}
+
+/* Мобильный/планшет: 2 колонки сетки, разделы на всю ширину, промо — ниже, 2 в ряд */
+@media (max-width: 1023.98px) {
+  .menu-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    justify-content: center;
+  }
+  /* Разделы (Женская / Мужская) — по одной колонке на строку, центрируем */
+  .menu-col {
+    grid-column: 1 / -1;
+    width: min(480px, 90vw);
+    justify-self: center;
+  }
+  /* Две промо-карточки — в 2 колонки; на очень узких — в одну */
+  .menu-promo { justify-self: center; }
+  .menu-promo .promo img { width: 140px; max-width: 100%; }
+  @media (max-width: 420px) {
+    .menu-grid { grid-template-columns: 1fr; }
+    .menu-promo .promo img { width: 90vw; }
+  }
+}
