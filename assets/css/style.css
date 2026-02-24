@@ -204,3 +204,21 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* === A11y / Misc === */
 a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+/* Desktop: сближаем левую и правую колонки меню и фиксируем ширину промо */
+@media (min-width: 1024px) {
+  .menu-grid {
+    /* было: 1fr 1fr 1fr — теперь «обнимашки» + узкая правая колонка */
+    grid-template-columns: max-content max-content 190px;
+    column-gap: 12px; /* расстояние между колонками — можно 8–16px */
+    row-gap: 16px;
+    justify-content: start; /* прижимаем все три колонки влево */
+  }
+
+  /* Колонки меню по ширине контента */
+  .menu-col { width: auto; }
+
+  /* Третья колонка (промо) ровно 190px */
+  .menu-promos { width: 190px; justify-items: center; }
+  .menu-promos .promo img { width: 190px; }
+}
