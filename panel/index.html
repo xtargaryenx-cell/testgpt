@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minnori — Панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="../assets/css/style.css" rel="stylesheet" />
+  <style>
+    .panel { max-width: 1000px; margin: 80px auto; padding: 0 20px; }
+    .card-panel { border: 1px solid #eee; padding: 16px; border-radius: 6px; margin-bottom: 16px; }
+    .row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: start; margin-bottom: 12px; }
+    .row label { color: var(--muted); font-size: 14px; }
+    input[type="text"], input[type="url"], input[type="number"], textarea {
+      width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px;
+      font: inherit;
+    }
+    textarea { min-height: 100px; }
+    .btn { display: inline-block; padding: 10px 14px; border: 1px solid #111; background: #111; color: #fff; cursor: pointer; border-radius: 4px; }
+    .btn.secondary { background: transparent; color: #111; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .items { display: grid; gap: 12px; }
+    .item { border: 1px dashed #ddd; padding: 10px; border-radius: 6px; }
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand"><a href="../" class="logo">MINNORI</a></div>
+</header>
+
+<main class="panel">
+  <h1>Панель управления</h1>
+  <p class="muted">Подключитесь к репозиторию GitHub, чтобы редактировать контент. Персональный токен хранится только в вашем браузере.</p>
+
+  <div class="card-panel">
+    <div class="row"><label>GitHub owner</label><input id="ghOwner" type="text" placeholder="ваш-логин" /></div>
+    <div class="row"><label>Repo</label><input id="ghRepo" type="text" placeholder="название-репозитория" /></div>
+    <div class="row"><label>Branch</label><input id="ghBranch" type="text" value="main" /></div>
+    <div class="row"><label>Token</label><input id="ghToken" type="text" placeholder="ghp_..." /></div>
+    <button class="btn" id="connectBtn">Подключиться</button>
+    <span id="status" class="muted"></span>
+  </div>
+
+  <div id="panelContent" style="display:none">
+    <div class="card-panel">
+      <h2>Главная</h2>
+      <div class="row"><label>Заголовок</label><input id="homeTitle" type="text" /></div>
+      <div class="row"><label>Описание (lead)</label><textarea id="homeLead"></textarea></div>
+      <div class="row"><label>Изображения (URL, по одному в строке)</label><textarea id="homeImages"></textarea></div>
+      <div class="row"><label>Загрузка изображения</label><input id="homeUpload" type="file" accept="image/*" /></div>
+      <button class="btn" id="saveHome">Сохранить главную</button>
+    </div>
+
+    <div class="card-panel">
+      <h2>Меню (навигация)</h2>
+      <div class="muted">Редактируйте разделы и подразделы. Сохраняйте, затем редактируйте соответствующие страницы категорий ниже.</div>
+      <div id="navEditor"></div>
+      <button class="btn" id="saveNav">Сохранить меню</button>
+    </div>
+
+    <div class="card-panel">
+      <h2>Страницы подразделов</h2>
+      <div class="cols-2">
+        <div>
+          <label>Родитель</label>
+          <select id="catParent"></select>
+        </div>
+        <div>
+          <label>Подраздел (slug)</label>
+          <input id="catSlug" type="text" placeholder="например: kedy" />
+        </div>
+      </div>
+      <div class="row"><label>Заголовок</label><input id="catTitle" type="text" placeholder="Мужские кеды" /></div>
+      <div class="row"><label>Описание</label><textarea id="catDesc"></textarea></div>
+      <div class="cols-2">
+        <div><label>Колонки</label><input id="catCols" type="number" min="1" max="6" value="3" /></div>
+        <div><label>Отступ (gap)</label><input id="catGap" type="text" value="24px" /></div>
+      </div>
+
+      <h3>Фотографии</h3>
+      <div id="items" class="items"></div>
+      <button class="btn secondary" id="addItem">Добавить фото</button>
+      <div class="row"><label>Загрузка изображения</label><input id="catUpload" type="file" accept="image/*" /></div>
+
+      <button class="btn" id="saveCat">Сохранить страницу</button>
+    </div>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
