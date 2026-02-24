@@ -1,48 +1,34 @@
 {
   "parents": [
     {
-      "id": "men",
-      "title": "Мужская обувь",
+      "id": "women",
+      "title": "Женская",
       "children": [
-        {
-          "slug": "krossovki",
-          "title": "Кроссовки"
-        },
-        {
-          "slug": "tufli",
-          "title": "Туфли"
-        },
-        {
-          "slug": "botinki",
-          "title": "Ботинки"
-        },
-        {
-          "slug": "kedy",
-          "title": "Кеды"
-        }
+        { "slug": "kedy", "title": "кеды" },
+        { "slug": "krossovki", "title": "кроссовки" },
+        { "slug": "tufli", "title": "туфли" },
+        { "slug": "botinki", "title": "ботинки" }
       ]
     },
     {
-      "id": "women",
-      "title": "Женская обувь",
+      "id": "men",
+      "title": "Мужская",
       "children": [
-        {
-          "slug": "kedy",
-          "title": "Кеды"
-        },
-        {
-          "slug": "krossovki",
-          "title": "Кроссовки"
-        },
-        {
-          "slug": "tufli",
-          "title": "Туфли"
-        },
-        {
-          "slug": "botinki",
-          "title": "Ботинки"
-        }
+        { "slug": "kedy", "title": "кеды" },
+        { "slug": "krossovki", "title": "кроссовки" },
+        { "slug": "tufli", "title": "туфли" },
+        { "slug": "botinki", "title": "ботинки" }
       ]
     }
-  ]
+  ],
+  "menuPromo": {
+    "women": {
+      "image": "assets/img/promo-women.jpg",
+      "link": "category.html?parent=women&slug=kedy"
+    },
+    "men": {
+      "image": "assets/img/promo-men.jpg",
+      "link": "category.html?parent=men&slug=kedy"
+    }
+  }
 }
