@@ -1,3 +1,4 @@
+// UTF-8 корректная панель управления Minnori
 const state = {
   owner: "", repo: "", branch: "main", token: "",
   home: null, nav: null, cat: null, items: []
@@ -8,6 +9,32 @@ const GH_HEADERS = () => ({
   Accept: "application/vnd.github+json",
   "X-GitHub-Api-Version": "2022-11-28"
 });
+
+// Base64 <-> Uint8Array
+function b64ToUint8Array(b64) {
+  const bin = atob(b64);
+  const len = bin.length;
+  const u8 = new Uint8Array(len);
+  for (let i = 0; i < len; i++) u8[i] = bin.charCodeAt(i);
+  return u8;
+}
+function uint8ToB64(u8) {
+  let bin = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < u8.length; i += chunk) {
+    bin += String.fromCharCode(...u8.subarray(i, i + chunk));
+  }
+  return btoa(bin);
+}
+// UTF-8 helpers
+function utf8ToBase64(str) {
+  const u8 = new TextEncoder().encode(str);
+  return uint8ToB64(u8);
+}
+function base64ToUtf8(b64) {
+  const u8 = b64ToUint8Array(b64);
+  return new TextDecoder("utf-8").decode(u8);
+}
 
 const api = {
   async get(path) {
@@ -33,7 +60,8 @@ const api = {
   },
   async getText(path) {
     const j = await this.get(path);
-    const content = atob(j.content.replace(/\n/g, ""));
+    const clean = (j.content || "").replace(/\n/g, "");
+    const content = base64ToUtf8(clean);
     return { text: content, sha: j.sha };
   },
   async getJSON(path) {
@@ -42,35 +70,24 @@ const api = {
   },
   async putJSON(path, obj, sha, msg) {
     const txt = JSON.stringify(obj, null, 2);
-    const b64 = btoa(unescape(encodeURIComponent(txt)));
+    const b64 = utf8ToBase64(txt);
     return this.put(path, b64, sha, msg);
   },
   async uploadFile(destPath, file) {
     const arrayBuf = await file.arrayBuffer();
-    const b64 = base64FromArrayBuffer(arrayBuf); // устойчиво к большим файлам
+    const b64 = uint8ToB64(new Uint8Array(arrayBuf)); // корректно для больших файлов
     return this.put(destPath, b64, undefined, `Upload ${destPath}`);
   }
 };
 
-// Надёжное кодирование ArrayBuffer -> base64 (чтобы не упасть на больших файлах)
-function base64FromArrayBuffer(buffer) {
-  const bytes = new Uint8Array(buffer);
-  const chunk = 0x8000; // ~32KB
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
-  }
-  return btoa(binary);
-}
-
-// Утилиты DOM
+// DOM утилиты
 function el(tag, props = {}, children = []) {
   const e = document.createElement(tag);
   Object.entries(props).forEach(([k, v]) => {
     if (k === "class") e.className = v;
     else if (k === "text") e.textContent = v;
     else if (k === "style" && typeof v === "object") Object.assign(e.style, v);
-    else if (k.startsWith("on") && typeof v === "function") e[k] = v; // ВАЖНО: события как свойства
+    else if (k.startsWith("on") && typeof v === "function") e[k] = v;
     else e.setAttribute(k, v);
   });
   (Array.isArray(children) ? children : [children]).forEach(c => {
@@ -80,14 +97,12 @@ function el(tag, props = {}, children = []) {
   });
   return e;
 }
-
 function setStatus(msg) { document.getElementById("status").textContent = msg; }
 
-// Безопасное сохранение JSON с автоподтягиванием sha на случай гонок
+// Безопасное сохранение JSON (ретрай при несовпадении sha)
 async function safePutJSON(path, obj, currentSha, msg) {
   try {
-    const res = await api.putJSON(path, obj, currentSha, msg);
-    return res;
+    return await api.putJSON(path, obj, currentSha, msg);
   } catch (e) {
     const s = String(e);
     if (s.includes("sha") || s.includes("does not match")) {
@@ -143,10 +158,7 @@ function fillNav() {
           el("input", { type: "text", value: c.title || "", "data-idx": idx, "data-cidx": cidx, "data-f": "title" })
         ]),
         el("div", { style: "margin-top:6px" }, [
-          el("button", {
-            class: "btn secondary",
-            onclick: () => { p.children.splice(cidx, 1); fillNav(); }
-          }, "Удалить подраздел")
+          el("button", { class: "btn secondary", onclick: () => { p.children.splice(cidx, 1); fillNav(); } }, "Удалить подраздел")
         ])
       ]);
     }));
@@ -163,10 +175,7 @@ function fillNav() {
       el("div", {}, [
         el("div", { class: "muted" }, "Подразделы:"),
         childrenBox,
-        el("button", {
-          class: "btn secondary",
-          onclick: () => { p.children = p.children || []; p.children.push({ slug: "new", title: "новая" }); fillNav(); }
-        }, "Добавить подраздел")
+        el("button", { class: "btn secondary", onclick: () => { p.children = p.children || []; p.children.push({ slug: "new", title: "новая" }); fillNav(); } }, "Добавить подраздел")
       ]),
       el("div", { style: "margin-top:10px" }, [
         el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.splice(idx, 1); fillNav(); } }, "Удалить раздел")
@@ -176,12 +185,8 @@ function fillNav() {
     root.appendChild(box);
   });
 
-  root.appendChild(el("button", {
-    class: "btn secondary",
-    onclick: () => { state.nav.data.parents.push({ id: "new", title: "Новый", children: [] }); fillNav(); }
-  }, "Добавить раздел"));
+  root.appendChild(el("button", { class: "btn secondary", onclick: () => { state.nav.data.parents.push({ id: "new", title: "Новый", children: [] }); fillNav(); } }, "Добавить раздел"));
 
-  // связываем инпуты с моделью
   root.querySelectorAll("input").forEach(inp => {
     inp.addEventListener("input", () => {
       const idx = +inp.getAttribute("data-idx");
@@ -212,7 +217,7 @@ async function saveHome() {
 
   try {
     const res = await safePutJSON("content/home.json", state.home.data, state.home.sha, "Update home.json");
-    state.home.sha = res.content.sha; // обновляем sha
+    state.home.sha = res.content.sha;
     setStatus("Главная сохранена");
   } catch (e) {
     console.error(e);
@@ -223,7 +228,7 @@ async function saveHome() {
 async function saveNav() {
   try {
     const res = await safePutJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json");
-    state.nav.sha = res.content.sha; // обновляем sha
+    state.nav.sha = res.content.sha;
     setStatus("Меню сохранено");
     fillParentsSelect();
   } catch (e) {
@@ -305,8 +310,7 @@ async function saveCat() {
 
   try {
     const txt = JSON.stringify(d, null, 2);
-    const b64 = btoa(unescape(encodeURIComponent(txt)));
-    // пробуем сохранить с текущим sha
+    const b64 = utf8ToBase64(txt);
     let res;
     try {
       res = await api.put(state.cat.path, b64, state.cat.sha, `Update ${state.cat.path}`);
@@ -320,7 +324,7 @@ async function saveCat() {
         throw e;
       }
     }
-    state.cat.sha = res.content.sha; // обновляем sha
+    state.cat.sha = res.content.sha;
     setStatus("Страница подраздела сохранена");
   } catch (e) {
     console.error(e);
@@ -335,7 +339,7 @@ async function uploadToAssets(inputEl, subfolder, onDone) {
   const dest = `assets/img/${subfolder}/${Date.now()}-${safeName}`;
   try {
     const res = await api.uploadFile(dest, f);
-    const rel = dest; // относительный путь для сайта
+    const rel = dest;
     onDone(rel);
     setStatus(`Загружено: ${rel}`);
     inputEl.value = "";
