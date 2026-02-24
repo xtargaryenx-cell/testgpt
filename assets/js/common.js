@@ -46,7 +46,7 @@ function makeColumn(parent) {
 }
 
 function buildMenuLayout(nav) {
-  const root = qs("#overlayContent");
+  const root = document.querySelector("#overlayContent");
   if (!root) return;
 
   const parents = nav.parents || [];
@@ -69,15 +69,27 @@ function buildMenuLayout(nav) {
   const wImg = wPromo.image ? `<a class="promo" href="${wHref}"><img src="${wPromo.image}" alt="Женская обувь"></a>` : "";
   const mImg = mPromo.image ? `<a class="promo" href="${mHref}"><img src="${mPromo.image}" alt="Мужская обувь"></a>` : "";
 
+  const makeColumn = (parent) => {
+    if (!parent) return "";
+    const children = (parent.children || []).map(c => {
+      const href = `category.html?parent=${encodeURIComponent(parent.id)}&slug=${encodeURIComponent(c.slug)}`;
+      return `<a href="${href}">${c.title || c.slug}</a>`;
+    }).join("");
+    return `
+      <div class="menu-col">
+        <div class="menu-parent">${parent.title || parent.id}</div>
+        <div class="menu-children">${children}</div>
+      </div>
+    `;
+  };
+
   root.innerHTML = `
     <div class="menu-home"><a href="./">Главная</a></div>
     <div class="menu-grid">
       ${makeColumn(women)}
       ${makeColumn(men)}
-      <div class="menu-promos">
-        ${wImg}
-        ${mImg}
-      </div>
+      <div class="menu-promo menu-promo--women">${wImg}</div>
+      <div class="menu-promo menu-promo--men">${mImg}</div>
     </div>
   `;
 }
