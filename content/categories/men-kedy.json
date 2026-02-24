@@ -1,9 +1,9 @@
 {
   "parentId": "men",
   "slug": "kedy",
-  "slugTitle": "ÐºÐµÐ´Ñ",
-  "title": "Мужские кеды",
-  "description": "что-то там",
+  "slugTitle": "ÃÂºÃÂµÃÂ´ÃÂ",
+  "title": "ÐÑÐ¶ÑÐºÐ¸Ðµ ÐºÐµÐ´Ñ",
+  "description": "ÑÑÐ¾-ÑÐ¾ ÑÐ°Ð¼",
   "grid": {
     "columns": 3,
     "gap": "24px"
