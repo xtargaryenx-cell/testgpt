@@ -1,4 +1,4 @@
-// UTF-8 корректная панель управления Minnori
+// UTF-8 корректная панель управления Minnori с поддержкой промо в меню
 const state = {
   owner: "", repo: "", branch: "main", token: "",
   home: null, nav: null, cat: null, items: []
@@ -75,7 +75,7 @@ const api = {
   },
   async uploadFile(destPath, file) {
     const arrayBuf = await file.arrayBuffer();
-    const b64 = uint8ToB64(new Uint8Array(arrayBuf)); // корректно для больших файлов
+    const b64 = uint8ToB64(new Uint8Array(arrayBuf));
     return this.put(destPath, b64, undefined, `Upload ${destPath}`);
   }
 };
@@ -131,6 +131,7 @@ async function connect() {
     state.nav = { data: nav.json, sha: nav.sha };
     fillHome();
     fillNav();
+    fillMenuPromo();
     fillParentsSelect();
     document.getElementById("panelContent").style.display = "block";
     setStatus("Подключено");
@@ -202,12 +203,14 @@ function fillNav() {
   });
 }
 
-function fillParentsSelect() {
-  const sel = document.getElementById("catParent");
-  sel.innerHTML = "";
-  (state.nav.data.parents || []).forEach(p => {
-    sel.appendChild(el("option", { value: p.id, text: p.title || p.id }));
-  });
+function fillMenuPromo() {
+  const promo = state.nav.data.menuPromo || {};
+  const w = promo.women || {};
+  const m = promo.men || {};
+  document.getElementById("promoWomenImg").value  = w.image || "";
+  document.getElementById("promoWomenLink").value = w.link  || "";
+  document.getElementById("promoMenImg").value    = m.image || "";
+  document.getElementById("promoMenLink").value   = m.link  || "";
 }
 
 async function saveHome() {
@@ -237,6 +240,31 @@ async function saveNav() {
   }
 }
 
+async function saveMenuPromo() {
+  state.nav.data.menuPromo = state.nav.data.menuPromo || { women: {}, men: {} };
+  state.nav.data.menuPromo.women.image = document.getElementById("promoWomenImg").value.trim();
+  state.nav.data.menuPromo.women.link  = document.getElementById("promoWomenLink").value.trim();
+  state.nav.data.menuPromo.men.image   = document.getElementById("promoMenImg").value.trim();
+  state.nav.data.menuPromo.men.link    = document.getElementById("promoMenLink").value.trim();
+
+  try {
+    const res = await safePutJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json (menu promo)");
+    state.nav.sha = res.content.sha;
+    setStatus("Промо в меню сохранено");
+  } catch (e) {
+    console.error(e);
+    setStatus("Ошибка сохранения промо");
+  }
+}
+
+function fillParentsSelect() {
+  const sel = document.getElementById("catParent");
+  sel.innerHTML = "";
+  (state.nav.data.parents || []).forEach(p => {
+    sel.appendChild(el("option", { value: p.id, text: p.title || p.id }));
+  });
+}
+
 async function loadCategory() {
   const parent = document.getElementById("catParent").value.trim();
   const slug = document.getElementById("catSlug").value.trim();
@@ -248,15 +276,7 @@ async function loadCategory() {
   } catch {
     state.cat = {
       path,
-      data: {
-        parentId: parent,
-        slug,
-        slugTitle: slug,
-        title: "",
-        description: "",
-        grid: { columns: 3, gap: "24px" },
-        items: []
-      },
+      data: { parentId: parent, slug, slugTitle: slug, title: "", description: "", grid: { columns: 3, gap: "24px" }, items: [] },
       sha: undefined
     };
   }
@@ -338,7 +358,7 @@ async function uploadToAssets(inputEl, subfolder, onDone) {
   const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const dest = `assets/img/${subfolder}/${Date.now()}-${safeName}`;
   try {
-    const res = await api.uploadFile(dest, f);
+    await api.uploadFile(dest, f);
     const rel = dest;
     onDone(rel);
     setStatus(`Загружено: ${rel}`);
@@ -351,8 +371,17 @@ async function uploadToAssets(inputEl, subfolder, onDone) {
 
 function bind() {
   document.getElementById("connectBtn").addEventListener("click", connect);
+
   document.getElementById("saveHome").addEventListener("click", saveHome);
   document.getElementById("saveNav").addEventListener("click", saveNav);
+  document.getElementById("saveMenuPromo").addEventListener("click", saveMenuPromo);
+
+  document.getElementById("promoWomenUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoWomenImg").value = rel; });
+  });
+  document.getElementById("promoMenUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoMenImg").value = rel; });
+  });
 
   document.getElementById("catParent").addEventListener("change", loadCategory);
   document.getElementById("catSlug").addEventListener("change", loadCategory);
