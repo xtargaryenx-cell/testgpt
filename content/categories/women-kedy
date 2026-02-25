@@ -1,0 +1,49 @@
+{
+  "parentId": "women",
+  "slug": "kedy",
+  "slugTitle": "Женские кеды",
+  "title": "Женские кеды",
+  "description": "Только натуральная кожа и лучшие матераилы",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": [
+    {
+      "image": "assets/img/men-kedy-1.jpg",
+      "caption": "Minnori Canvas One",
+      "link": "https://example.com/kedy-1",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/men-kedy-2.jpg",
+      "caption": "Minnori Leather Low",
+      "link": "https://example.com/kedy-2",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/men-kedy-3.jpg",
+      "caption": "Minnori Court Clean",
+      "link": "https://example.com/kedy-3",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/1771933026632-men-kedy-1.jpg",
+      "caption": "Ð¿ÑÐ¿",
+      "link": "https://example.com/kedy-3",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
+      "caption": "",
+      "link": "https://example.com/kedy-3",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
+      "caption": "Класные кеды 3",
+      "link": "https://example.com/kedy-3",
+      "target": "_blank"
+    }
+  ]
+}
