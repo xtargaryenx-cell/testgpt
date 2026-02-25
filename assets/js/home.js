@@ -1,41 +1,39 @@
-async function renderHome() {
+function renderHero(data) {
+  const root = document.querySelector("#homeRoot");
+  if (!root) return;
+
+  const hero = data.hero || {};
+  const desktop = hero.desktop || "";
+  const mobile  = hero.mobile  || "";
+  const altText = hero.alt || data.title || "Hero";
+
+  const html = `
+    <section class="hero-full">
+      <div class="hero-wide">
+        <figure class="hero-figure">
+          <picture>
+            ${mobile ? `<source media="(max-width: 1024px)" srcset="${mobile}">` : ""}
+            ${desktop ? `<img src="${desktop}" alt="${altText}">` : ""}
+          </picture>
+        </figure>
+      </div>
+    </section>
+  `;
+
+  const title = data.title ? `<h1>${data.title}</h1>` : "";
+  const lead  = data.lead  ? `<p class="lead">${data.lead}</p>` : "";
+  const textBlock = (title || lead) ? `<div class="container hero">${title}${lead}</div>` : "";
+
+  root.innerHTML = html + textBlock;
+}
+
+async function buildHome() {
   try {
-    const root = document.getElementById("homeRoot");
     const data = await fetchJSON("content/home.json");
-    root.innerHTML = "";
-
-    const hero = document.createElement("section");
-    hero.className = "hero";
-
-    const h1 = document.createElement("h1");
-    h1.textContent = data.title || "Minnori — обувь";
-    hero.appendChild(h1);
-
-    if (data.lead) {
-      const p = document.createElement("p");
-      p.className = "lead";
-      p.textContent = data.lead;
-      hero.appendChild(p);
-    }
-
-    if (Array.isArray(data.images) && data.images.length > 0) {
-      const wrap = document.createElement("div");
-      wrap.className = "hero-images " + (data.images.length >= 2 ? "two" : "");
-
-      data.images.slice(0, 2).forEach((src) => {
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = "Minnori";
-        wrap.appendChild(img);
-      });
-
-      hero.appendChild(wrap);
-    }
-
-    root.appendChild(hero);
+    renderHero(data);
   } catch (e) {
-    console.error("Home render error", e);
+    console.error("Не удалось загрузить главную:", e);
   }
 }
 
-document.addEventListener("DOMContentLoaded", renderHome);
+document.addEventListener("DOMContentLoaded", buildHome);
