@@ -1,97 +1,94 @@
-function qs(sel, root = document) { return root.querySelector(sel); }
-async function fetchJSON(path) {
-  const res = await fetch(path, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Не удалось загрузить ${path}: ${res.status}`);
-  }
-  return res.json();
-}
+// Страница подкатегории: загрузка данных, установка тайтла и рендер
 
-function params() {
+function getQueryParam(name) {
   const u = new URL(location.href);
-  return {
-    parent: (u.searchParams.get("parent") || "").trim(),
-    slug: (u.searchParams.get("slug") || "").trim()
-  };
+  return u.searchParams.get(name) || "";
 }
 
-function humanParent(p) {
-  if (p === "men") return "Мужские";
-  if (p === "women") return "Женские";
-  return "";
+function adjByParentId(id, fallbackTitle) {
+  const key = (id || "").toLowerCase();
+  if (key === "men") return "Мужские";
+  if (key === "women") return "Женские";
+  // Иначе используем заголовок из навигации как есть (без склонения)
+  return (fallbackTitle || "").trim();
 }
 
-async function renderCategory() {
-  const root = document.getElementById("categoryRoot");
-  const { parent, slug } = params();
-  if (!parent || !slug) {
-    root.innerHTML = "<p>Страница не найдена: отсутствуют параметры parent/slug.</p>";
+function composeTitle(nav, parentId, slug, catData) {
+  // Ищем родителя и подраздел в навигации
+  const parents = (nav && nav.parents) || [];
+  const parent = parents.find(p => (p.id || "").toLowerCase() === (parentId || "").toLowerCase());
+  const child  = parent?.children?.find(c => (c.slug || "").toLowerCase() === (slug || "").toLowerCase());
+
+  const adj = adjByParentId(parentId, parent?.title || "");
+  // Приоритет названия подкатегории: из навигации -> из данных категории -> slug
+  const subTitle = (child?.title || catData?.slugTitle || catData?.title || slug || "").trim();
+
+  const prefix = "Обувь Minnori | ";
+  if (adj) return `${prefix}${adj}${subTitle ? " " + subTitle : ""}`;
+  // Фолбэк, если не нашли adj: используем "Каталог" + название
+  return `${prefix}${parent?.title || "Каталог"}${subTitle ? " " + subTitle : ""}`;
+}
+
+function cardHTML(item) {
+  const img = item.image ? `<img src="${item.image}" alt="${item.caption || ""}">` : "";
+  const cap = item.caption ? `<div class="caption">${item.caption}</div>` : "";
+  const inner = `${img}${cap}`;
+  if (item.link) {
+    return `<a class="card" href="${item.link}" target="${item.target || "_self"}" rel="${item.target === "_blank" ? "noopener" : ""}">${inner}</a>`;
+  }
+  return `<div class="card">${inner}</div>`;
+}
+
+async function buildCategory() {
+  const parentId = getQueryParam("parent");
+  const slug = getQueryParam("slug");
+
+  if (!parentId || !slug) {
+    console.warn("Не заданы параметры parent/slug");
+    document.title = "Обувь Minnori | Каталог";
     return;
   }
-  const path = `content/categories/${parent}-${slug}.json`;
 
   try {
-    const data = await fetchJSON(path);
-    root.innerHTML = "";
+    // Загружаем данные категории и навигацию параллельно
+    const [catData, nav] = await Promise.all([
+      fetchJSON(`content/categories/${encodeURIComponent(parentId)}-${encodeURIComponent(slug)}.json`),
+      fetchJSON("content/navigation.json")
+    ]);
 
-    const header = document.createElement("div");
-    header.className = "category-header";
+    // Тайтл
+    document.title = composeTitle(nav, parentId, slug, catData);
 
-    const h1 = document.createElement("h1");
-    const defaultTitle = `${humanParent(parent)} ${data.slugTitle || data.slug || ""}`.trim();
-    h1.textContent = data.title || defaultTitle || "Категория";
-    header.appendChild(h1);
+    // Разметка страницы
+    const root = document.querySelector("#categoryRoot");
+    if (!root) return;
 
-    if (data.description) {
-      const p = document.createElement("p");
-      p.textContent = data.description;
-      header.appendChild(p);
-    }
+    const title = catData.title || "";
+    const desc  = catData.description || "";
 
-    root.appendChild(header);
-
-    const grid = document.createElement("div");
-    grid.className = "grid";
-    grid.style.setProperty("--grid-columns", (data.grid && data.grid.columns) || 3);
-    grid.style.setProperty("--grid-gap", (data.grid && data.grid.gap) || "24px");
-
-    if (!Array.isArray(data.items) || data.items.length === 0) {
-      const empty = document.createElement("p");
-      empty.textContent = "Нет элементов для отображения.";
-      root.appendChild(empty);
-      return;
-    }
-
-    data.items.forEach((it) => {
-      const a = document.createElement("a");
-      a.className = "card";
-      a.href = it.link || "#";
-      a.target = it.target || "_blank";
-      a.rel = "noopener";
-
-      const img = document.createElement("img");
-      img.src = it.image;
-      img.alt = it.caption || "Minnori";
-      a.appendChild(img);
-
-      if (it.caption) {
-        const cap = document.createElement("div");
-        cap.className = "caption";
-        cap.textContent = it.caption;
-        a.appendChild(cap);
-      }
-
-      grid.appendChild(a);
-    });
-
-    root.appendChild(grid);
-  } catch (e) {
-    console.error(e);
-    root.innerHTML = `
-      <p>Не удалось загрузить страницу категории.</p>
-      <p style="color:#666">Ожидался файл: ${path}</p>
+    // Хедер
+    const headerHTML = `
+      <div class="category-header">
+        ${title ? `<h1>${title}</h1>` : ""}
+        ${desc ? `<p>${desc}</p>` : ""}
+      </div>
     `;
+
+    // Сетка карточек
+    const items = Array.isArray(catData.items) ? catData.items : [];
+    const gridHTML = `
+      <div class="grid">
+        ${items.map(cardHTML).join("")}
+      </div>
+    `;
+
+    root.innerHTML = headerHTML + gridHTML;
+  } catch (e) {
+    console.error("Ошибка загрузки подкатегории:", e);
+    document.title = "Обувь Minnori | Каталог";
+    const root = document.querySelector("#categoryRoot");
+    if (root) root.innerHTML = `<p>Не удалось загрузить данные этой подкатегории.</p>`;
   }
 }
 
-document.addEventListener("DOMContentLoaded", renderCategory);
+document.addEventListener("DOMContentLoaded", buildCategory);
