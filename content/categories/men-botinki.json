@@ -1,0 +1,12 @@
+{
+  "parentId": "men",
+  "slug": "botinki",
+  "slugTitle": "botinki",
+  "title": "Мужские ботинки",
+  "description": "тест тестовый",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": []
+}
