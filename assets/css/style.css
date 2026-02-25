@@ -168,11 +168,6 @@ img { max-width: 100%; height: auto; display: block; }
 .card { display: block; }
 .card img { width: 100%; border: 1px solid #eee; }
 
-/* Изображения на страницах подкатегорий: ширина 365px, высота по пропорции */
-#categoryRoot .card img {
-  width: 365px; max-width: 100%; height: auto; margin: 0 auto; display: block;
-}
-
 .card .caption { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
 /* Footer */
@@ -180,3 +175,54 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* A11y */
 a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+/* Только для страниц подкатегорий (#categoryRoot):
+   - Десктоп (шире 1024px): 3 изображения в ряд, каждое 365px по ширине, сетка центрирована.
+   - ≤1024px (включая мобильные): 2 изображения в ряд, адаптивно, центрировано. */
+
+/* Базовая сетка подкатегорий */
+#categoryRoot .grid {
+  display: grid;
+  gap: var(--grid-gap, 24px);
+  /* Десктоп по умолчанию (перекроется медиазапросом ниже): оставлено для ясности */
+  grid-auto-rows: auto;
+  justify-content: center; /* центрируем всю сетку как блок */
+}
+
+/* Карточка и изображение */
+#categoryRoot .card {
+  width: 365px;             /* фикс. ширина карточки на десктопе */
+  justify-self: center;     /* центрируем карточку внутри ячейки */
+}
+#categoryRoot .card img {
+  width: 100%;              /* ширина картинки равна ширине карточки */
+  height: auto;             /* высота по пропорции */
+  display: block;
+}
+
+/* Десктоп >1024px: ровно 3 колонки по 365px, сетка центрирована */
+@media (min-width: 1025px) {
+  #categoryRoot .grid {
+    grid-template-columns: repeat(3, 365px);
+    justify-content: center;
+  }
+}
+
+/* ≤1024px: 2 колонки, элементы адаптивно сжимаются, но не шире 365px */
+@media (max-width: 1024px) {
+  #categoryRoot .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: center;
+  }
+  #categoryRoot .card {
+    width: 100%;
+    max-width: 365px;       /* ограничиваем максимальную ширину карточки */
+  }
+}
+
+/* На очень узких экранах — сохраняем именно 2 колонки (перекрываем возможные общие стили) */
+@media (max-width: 560px) {
+  #categoryRoot .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
