@@ -21,7 +21,7 @@ img { max-width: 100%; height: auto; display: block; }
 .container { max-width: var(--container); margin: 80px auto 64px; padding: 0 20px; }
 .container-narrow { max-width: var(--container-narrow); margin: 80px auto 64px; padding: 0 20px; }
 
-/* === Header: трёхколоночная сетка, логотип по центру горизонтали и вертикали === */
+/* Header: три колонки, логотип по центру и по вертикали */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
   display: grid; grid-template-columns: 72px 1fr 72px;
@@ -30,7 +30,6 @@ img { max-width: 100%; height: auto; display: block; }
   border-bottom: 1px solid #eee; z-index: 1000;
   padding: 0;
 }
-
 .menu-toggle {
   grid-column: 1; justify-self: start; align-self: center;
   margin-left: 16px;
@@ -48,24 +47,15 @@ img { max-width: 100%; height: auto; display: block; }
   display: flex; align-items: center; justify-content: center;
   align-self: stretch;
 }
-.logo {
-  display: inline-flex; align-items: center; justify-content: center;
-  line-height: 0; height: 100%;
-}
-.logo-img {
-  display: block; width: auto; object-fit: contain;
-  height: 28px;
-  max-width: min(60vw, 260px);
-}
-
+.logo { display: inline-flex; align-items: center; justify-content: center; line-height: 0; height: 100%; }
+.logo-img { display: block; width: auto; object-fit: contain; height: 28px; max-width: min(60vw, 260px); }
 .header-spacer { grid-column: 3; }
 
-/* Десктоп ≥1024px: слегка увеличиваем логотип */
 @media (min-width: 1024px) {
   .logo-img { height: 32px; max-width: none; }
 }
 
-/* === Overlay menu — десктоп: полоса 50vh, мобильный: фуллскрин === */
+/* Overlay menu */
 .overlay-menu {
   position: fixed; left: 0; right: 0; top: 0;
   background: #fff;
@@ -76,10 +66,7 @@ img { max-width: 100%; height: auto; display: block; }
   border-bottom: 1px solid #eee;
 }
 @media (min-width: 1024px) {
-  .overlay-menu {
-    height: clamp(280px, 50vh, 520px); /* Было 38vh — стало 50vh */
-    overflow: visible;
-  }
+  .overlay-menu { height: clamp(280px, 50vh, 520px); overflow: visible; }
 }
 @media (max-width: 1023.98px) {
   .overlay-menu {
@@ -91,78 +78,65 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .overlay-menu.open { transform: translateY(0); opacity: 1; }
 
+/* Шапка меню и крестик без кружка */
 .overlay-head { position: relative; height: 64px; }
 .menu-close {
-  position: absolute; top: 14px; left: 24px;
-  width: 36px; height: 36px; border: 1px solid #111; border-radius: 18px;
-  background: #fff; cursor: pointer; display: grid; place-items: center;
+  position: absolute; top: 16px; left: 24px;
+  width: 36px; height: 36px; border: 0; border-radius: 0; background: transparent;
+  cursor: pointer; display: grid; place-items: center;
 }
 .menu-close span {
-  position: absolute; display: block; width: 18px; height: 2px; background: #111;
+  position: absolute; display: block; width: 22px; height: 2px; background: var(--fg);
+  transition: opacity .2s ease;
 }
 .menu-close span:first-child { transform: rotate(45deg); }
 .menu-close span:last-child  { transform: rotate(-45deg); }
+.menu-close:hover { opacity: .8; }
 .menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-.overlay-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 8px 20px 24px;
-}
 
-/* Убираем подчеркивание у ссылок в меню */
-.menu-children a,
-.menu-home a {
-  color: var(--muted);
-  border-bottom: none !important;
-  text-decoration: none;
-}
-.menu-children a:hover,
-.menu-children a:focus-visible,
-.menu-home a:hover,
-.menu-home a:focus-visible {
-  color: var(--accent);
-  border: none !important;
-  text-decoration: none;
-}
+/* Контент меню */
+.overlay-inner { max-width: 1200px; margin: 0 auto; padding: 8px 20px 24px; }
 
-/* Сетка: две колонки разделов + правая колонка с промо-картинками */
-.menu-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Женская | Мужская | Промо */
-  gap: 16px;  /* Было 32px — теперь 16px */
-  align-items: start;
-}
+/* Главная — жирным, без подчёркивания */
+.menu-home { margin-bottom: 10px; }
+.menu-home a { font-weight: 700; text-decoration: none; }
+
+/* Сетка меню: Женская | Мужская | Промо1 | Промо2 */
+.menu-grid { display: grid; align-items: start; }
 .menu-col .menu-parent { font-weight: 700; margin-bottom: 8px; }
 .menu-col .menu-children { display: grid; gap: 6px; padding-left: 12px; }
-.menu-col .menu-children a { color: var(--muted); }
+.menu-col .menu-children a { color: var(--muted); text-decoration: none; }
 .menu-col .menu-children a:hover, .menu-col .menu-children a:focus-visible { color: var(--accent); }
 
-.menu-home { margin-bottom: 10px; }
-
-.menu-promos { display: grid; gap: 16px; justify-items: center; }
-.menu-promos .promo img {
-  width: 190px;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 4/5;
-  border: 1px solid #eee;
-  object-fit: cover;
+/* Десктоп: 4 колонки, между ними ровно 80px; промо фикс. ширины 239px */
+@media (min-width: 1024px) {
+  .menu-grid {
+    grid-template-columns: max-content max-content 239px 239px;
+    column-gap: 80px;
+    row-gap: 16px;
+    justify-content: start;
+  }
+  .menu-col { width: auto; }
+  .menu-promo { width: 239px; justify-self: start; }
+  .menu-promo .promo img {
+    width: 239px; height: auto; aspect-ratio: 4/5;
+    object-fit: cover; border: 1px solid #eee;
+  }
 }
 
-/* Мобильный режим: колонки по центру, промо меньше и под колонками */
+/* Мобильный/планшет: левая и правая колонки в один ряд; ниже — 2 промо */
 @media (max-width: 1023.98px) {
   .overlay-inner { height: calc(100% - 64px); overflow: auto; padding-bottom: 32px; }
-  .menu-grid { grid-template-columns: 1fr; gap: 20px; justify-items: center; }
-  .menu-col { width: min(480px, 90%); }
-  .menu-promos { width: min(480px, 90%); grid-template-columns: 1fr 1fr; gap: 10px; }
-  .menu-promos .promo img {
-    width: 140px;
-    max-width: 100%;
+  .menu-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    column-gap: 12px; row-gap: 16px;
+    justify-content: center; justify-items: center;
   }
-  @media (max-width: 420px) {
-    .menu-promos { grid-template-columns: 1fr; }
-    .menu-promos .promo img { width: 90vw; }
+  .menu-col {
+    grid-column: auto; width: auto; justify-self: center;
   }
+  .menu-promo { grid-column: auto; justify-self: center; }
+  .menu-promo .promo img { width: 140px; max-width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; border: 1px solid #eee; }
 }
 
 /* Блокировка скролла фона — только на мобильном фуллскрине */
@@ -170,7 +144,7 @@ img { max-width: 100%; height: auto; display: block; }
   html.menu-open, body.menu-open { overflow: hidden; height: 100%; touch-action: none; }
 }
 
-/* === Home (главная) === */
+/* Home */
 .hero { margin-top: 20px; }
 .hero h1 { font-size: 36px; margin: 0 0 12px 0; letter-spacing: 0.02em; }
 .hero p.lead { color: var(--muted); margin: 0 0 24px 0; line-height: 1.6; }
@@ -179,7 +153,7 @@ img { max-width: 100%; height: auto; display: block; }
   .hero-images.two { grid-template-columns: 1.2fr 1fr; align-items: stretch; }
 }
 
-/* === Category (страницы подкатегорий) === */
+/* Category page */
 .category-header { margin: 10px 0 22px; }
 .category-header h1 { font-size: 28px; margin: 0 0 10px; }
 .category-header p { color: var(--muted); margin: 0; line-height: 1.6; }
@@ -190,138 +164,19 @@ img { max-width: 100%; height: auto; display: block; }
   gap: var(--grid-gap);
   margin-top: 24px;
 }
-@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
 
 .card { display: block; }
 .card img { width: 100%; border: 1px solid #eee; }
+
+/* Изображения на страницах подкатегорий: ширина 365px, высота по пропорции */
+#categoryRoot .card img {
+  width: 365px; max-width: 100%; height: auto; margin: 0 auto; display: block;
+}
+
 .card .caption { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
-/* === Footer === */
-.site-footer {
-  border-top: 1px solid #eee; padding: 24px 20px; text-align: center; color: var(--muted);
-}
+/* Footer */
+.site-footer { border-top: 1px solid #eee; padding: 24px 20px; text-align: center; color: var(--muted); }
 
-/* === A11y / Misc === */
+/* A11y */
 a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-
-/* Desktop: сближаем левую и правую колонки меню и фиксируем ширину промо */
-@media (min-width: 1024px) {
-  .menu-grid {
-    /* было: 1fr 1fr 1fr — теперь «обнимашки» + узкая правая колонка */
-    grid-template-columns: max-content max-content 190px;
-    column-gap: 12px; /* расстояние между колонками — можно 8–16px */
-    row-gap: 16px;
-    justify-content: start; /* прижимаем все три колонки влево */
-  }
-
-  /* Колонки меню по ширине контента */
-  .menu-col { width: auto; }
-
-  /* Третья колонка (промо) ровно 190px */
-  .menu-promos { width: 190px; justify-items: center; }
-  .menu-promos .promo img { width: 190px; }
-}
-/* === Меню: 4 колонки на десктопе с фиксированными промежутками === */
-@media (min-width: 1024px) {
-  .menu-grid {
-    /* Женская | Мужская | Промо 1 | Промо 2 */
-    grid-template-columns: max-content max-content 239px 239px;
-    column-gap: 80px;   /* ровно 80px между всеми соседними колонками */
-    row-gap: 16px;
-    justify-content: start; /* прижимаем блок к левому краю контейнера */
-  }
-  .menu-col { width: auto; } /* ширина колонок под контент */
-
-  /* Отдельные промо-колонки */
-  .menu-promo { width: 239px; justify-self: start; }
-  .menu-promo .promo img {
-    width: 239px; height: auto; aspect-ratio: 4/5;
-    object-fit: cover; border: 1px solid #eee;
-  }
-}
-
-/* Мобильный/планшет: 2 колонки сетки, разделы на всю ширину, промо — ниже, 2 в ряд */
-@media (max-width: 1023.98px) {
-  .menu-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 12px;
-    justify-content: center;
-  }
-  /* Разделы (Женская / Мужская) — по одной колонке на строку, центрируем */
-  .menu-col {
-    grid-column: 1 / -1;
-    width: min(480px, 90vw);
-    justify-self: center;
-  }
-  /* Две промо-карточки — в 2 колонки; на очень узких — в одну */
-  .menu-promo { justify-self: center; }
-  .menu-promo .promo img { width: 140px; max-width: 100%; }
-  @media (max-width: 420px) {
-    .menu-grid { grid-template-columns: 1fr; }
-    .menu-promo .promo img { width: 90vw; }
-  }
-}
-/* 1) Крестик без кружка */
-.menu-close {
-  position: absolute; top: 16px; left: 24px;
-  width: 36px; height: 36px;
-  border: 0; border-radius: 0; background: transparent;
-  cursor: pointer; display: grid; place-items: center;
-}
-.menu-close span {
-  position: absolute; display: block;
-  width: 22px; height: 2px; background: var(--fg);
-  transition: opacity .2s ease;
-}
-.menu-close span:first-child { transform: rotate(45deg); }
-.menu-close span:last-child  { transform: rotate(-45deg); }
-.menu-close:hover { opacity: .8; }
-.menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-
-/* 2) «Главная» — жирным */
-.menu-home a { font-weight: 700 !important; }
-
-/* 3) Мобильная версия: левая и правая колонки в один ряд; ниже — два промо-блока */
-@media (max-width: 1023.98px) {
-  /* Две равные колонки в сетке меню */
-  .menu-grid {
-    grid-template-columns: repeat(2, minmax(140px, 1fr));
-    column-gap: 12px;
-    row-gap: 16px;
-    justify-content: center; /* центрируем всю сетку по ширине экрана */
-    justify-items: center;
-  }
-
-  /* Сами колонки меню (Женская/Мужская) — занимают по одной ячейке, стоят в одну строку */
-  .menu-col {
-    grid-column: auto !important;  /* переопределяем возможный span на всю ширину */
-    width: auto;
-    justify-self: center;
-  }
-
-  /* Промо-блоки — займут следующую строку (3-й и 4-й элементы сетки), по два в ряд */
-  .menu-promo {
-    grid-column: auto;
-    justify-self: center;
-  }
-  /* Размер промо на мобиле (умеренно уменьшен) */
-  .menu-promo .promo img {
-    width: 140px;
-    max-width: 100%;
-  }
-
-  /* На очень узких экранах можно встать в одну колонку (по желанию раскомментировать):
-  @media (max-width: 360px) {
-    .menu-grid { grid-template-columns: 1fr; }
-  }
-  */
-}
-/* Категории: фиксируем ширину изображения 365px, высота по пропорции */
-#categoryRoot .card img {
-  width: 365px;
-  max-width: 100%; /* чтобы на узких экранах не вылезало за колонку */
-  height: auto;
-  margin: 0 auto; /* центрируем картинку в колонке */
-  display: block;
-}
