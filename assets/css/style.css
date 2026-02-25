@@ -10,6 +10,10 @@
   --grid-columns: 3;
   --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* Hero (главная) */
+  --hero-max: 1600px;
+  --hero-margin-max: 65px;
 }
 
 /* Base */
@@ -21,12 +25,13 @@ img { max-width: 100%; height: auto; display: block; }
 .container { max-width: var(--container); margin: 80px auto 64px; padding: 0 20px; }
 .container-narrow { max-width: var(--container-narrow); margin: 80px auto 64px; padding: 0 20px; }
 
-/* Header: три колонки, логотип по центру и по вертикали */
+/* Header */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; height: 64px;
   display: grid; grid-template-columns: 72px 1fr 72px;
   align-items: center;
-  background: rgba(255,255,255,0.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; z-index: 1000;
   padding: 0;
 }
@@ -36,24 +41,14 @@ img { max-width: 100%; height: auto; display: block; }
   width: 40px; height: 40px; background: transparent; border: 0; cursor: pointer;
   display: grid; place-items: center;
 }
-.menu-toggle span {
-  display: block; width: 22px; height: 2px; background: var(--fg);
-  margin: 3px 0; transition: transform .3s, opacity .3s;
-}
+.menu-toggle span { display: block; width: 22px; height: 2px; background: var(--fg); margin: 3px 0; transition: transform .3s, opacity .3s; }
 .menu-toggle:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
 
-.brand {
-  grid-column: 2;
-  display: flex; align-items: center; justify-content: center;
-  align-self: stretch;
-}
+.brand { grid-column: 2; display: flex; align-items: center; justify-content: center; align-self: stretch; }
 .logo { display: inline-flex; align-items: center; justify-content: center; line-height: 0; height: 100%; }
 .logo-img { display: block; width: auto; object-fit: contain; height: 28px; max-width: min(60vw, 260px); }
 .header-spacer { grid-column: 3; }
-
-@media (min-width: 1024px) {
-  .logo-img { height: 32px; max-width: none; }
-}
+@media (min-width: 1024px) { .logo-img { height: 32px; max-width: none; } }
 
 /* Overlay menu */
 .overlay-menu {
@@ -78,37 +73,32 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .overlay-menu.open { transform: translateY(0); opacity: 1; }
 
-/* Шапка меню и крестик без кружка */
+/* Overlay head + close (крестик без кружка) */
 .overlay-head { position: relative; height: 64px; }
 .menu-close {
   position: absolute; top: 16px; left: 24px;
   width: 36px; height: 36px; border: 0; border-radius: 0; background: transparent;
   cursor: pointer; display: grid; place-items: center;
 }
-.menu-close span {
-  position: absolute; display: block; width: 22px; height: 2px; background: var(--fg);
-  transition: opacity .2s ease;
-}
+.menu-close span { position: absolute; display: block; width: 22px; height: 2px; background: var(--fg); transition: opacity .2s ease; }
 .menu-close span:first-child { transform: rotate(45deg); }
 .menu-close span:last-child  { transform: rotate(-45deg); }
 .menu-close:hover { opacity: .8; }
 .menu-close:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
 
-/* Контент меню */
+/* Overlay content */
 .overlay-inner { max-width: 1200px; margin: 0 auto; padding: 8px 20px 24px; }
 
-/* Главная — жирным, без подчёркивания */
+/* Меню: Главная — жирным, пункты без подчёркивания */
 .menu-home { margin-bottom: 10px; }
 .menu-home a { font-weight: 700; text-decoration: none; }
-
-/* Сетка меню: Женская | Мужская | Промо1 | Промо2 */
-.menu-grid { display: grid; align-items: start; }
 .menu-col .menu-parent { font-weight: 700; margin-bottom: 8px; }
 .menu-col .menu-children { display: grid; gap: 6px; padding-left: 12px; }
 .menu-col .menu-children a { color: var(--muted); text-decoration: none; }
 .menu-col .menu-children a:hover, .menu-col .menu-children a:focus-visible { color: var(--accent); }
 
-/* Десктоп: 4 колонки, между ними ровно 80px; промо фикс. ширины 239px */
+/* Сетка меню: Женская | Мужская | Промо1 | Промо2 */
+.menu-grid { display: grid; align-items: start; }
 @media (min-width: 1024px) {
   .menu-grid {
     grid-template-columns: max-content max-content 239px 239px;
@@ -119,11 +109,9 @@ img { max-width: 100%; height: auto; display: block; }
   .menu-col { width: auto; }
   .menu-promo { width: 239px; justify-self: start; }
   .menu-promo .promo img {
-    width: 239px; height: auto; aspect-ratio: 4/5;
-    object-fit: cover; border: 1px solid #eee;
+    width: 239px; height: auto; aspect-ratio: 4/5; object-fit: cover; border: 1px solid #eee;
   }
 }
-
 /* Мобильный/планшет: левая и правая колонки в один ряд; ниже — 2 промо */
 @media (max-width: 1023.98px) {
   .overlay-inner { height: calc(100% - 64px); overflow: auto; padding-bottom: 32px; }
@@ -132,41 +120,42 @@ img { max-width: 100%; height: auto; display: block; }
     column-gap: 12px; row-gap: 16px;
     justify-content: center; justify-items: center;
   }
-  .menu-col {
-    grid-column: auto; width: auto; justify-self: center;
-  }
+  .menu-col { grid-column: auto; width: auto; justify-self: center; }
   .menu-promo { grid-column: auto; justify-self: center; }
   .menu-promo .promo img { width: 140px; max-width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; border: 1px solid #eee; }
 }
-
 /* Блокировка скролла фона — только на мобильном фуллскрине */
 @media (max-width: 1023.98px) {
   html.menu-open, body.menu-open { overflow: hidden; height: 100%; touch-action: none; }
 }
 
-/* Home */
-.hero { margin-top: 20px; }
-.hero h1 { font-size: 36px; margin: 0 0 12px 0; letter-spacing: 0.02em; }
-.hero p.lead { color: var(--muted); margin: 0 0 24px 0; line-height: 1.6; }
-.hero-images { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
-@media (min-width: 900px) {
-  .hero-images.two { grid-template-columns: 1.2fr 1fr; align-items: stretch; }
+/* Hero (главная): горизонтальный баннер с адаптивными отступами и вертикальный для ≤1024px */
+.hero-full {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 80px; /* чтобы не прятался за фиксированным хедером */
 }
+.hero-wide { margin-inline: clamp(0px, (100vw - var(--hero-max)) / 2, var(--hero-margin-max)); }
+.hero-figure { width: min(100%, var(--hero-max)); margin: 0 auto; }
+.hero-figure img { display: block; width: 100%; height: auto; }
 
-/* Category page */
+/* Category page: только для подкатегорий — 3×365px на десктопе, 2 в ряд при ≤1024px */
 .category-header { margin: 10px 0 22px; }
 .category-header h1 { font-size: 28px; margin: 0 0 10px; }
 .category-header p { color: var(--muted); margin: 0; line-height: 1.6; }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
-  gap: var(--grid-gap);
-  margin-top: 24px;
+#categoryRoot .grid { display: grid; gap: var(--grid-gap, 24px); grid-auto-rows: auto; justify-content: center; }
+#categoryRoot .card { width: 365px; justify-self: center; }
+#categoryRoot .card img { width: 100%; height: auto; display: block; }
+@media (min-width: 1025px) { #categoryRoot .grid { grid-template-columns: repeat(3, 365px); } }
+@media (max-width: 1024px) {
+  #categoryRoot .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #categoryRoot .card { width: 100%; max-width: 365px; }
 }
-
-.card { display: block; }
-.card img { width: 100%; border: 1px solid #eee; }
 
 .card .caption { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
@@ -175,54 +164,3 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* A11y */
 a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
-
-/* Только для страниц подкатегорий (#categoryRoot):
-   - Десктоп (шире 1024px): 3 изображения в ряд, каждое 365px по ширине, сетка центрирована.
-   - ≤1024px (включая мобильные): 2 изображения в ряд, адаптивно, центрировано. */
-
-/* Базовая сетка подкатегорий */
-#categoryRoot .grid {
-  display: grid;
-  gap: var(--grid-gap, 24px);
-  /* Десктоп по умолчанию (перекроется медиазапросом ниже): оставлено для ясности */
-  grid-auto-rows: auto;
-  justify-content: center; /* центрируем всю сетку как блок */
-}
-
-/* Карточка и изображение */
-#categoryRoot .card {
-  width: 365px;             /* фикс. ширина карточки на десктопе */
-  justify-self: center;     /* центрируем карточку внутри ячейки */
-}
-#categoryRoot .card img {
-  width: 100%;              /* ширина картинки равна ширине карточки */
-  height: auto;             /* высота по пропорции */
-  display: block;
-}
-
-/* Десктоп >1024px: ровно 3 колонки по 365px, сетка центрирована */
-@media (min-width: 1025px) {
-  #categoryRoot .grid {
-    grid-template-columns: repeat(3, 365px);
-    justify-content: center;
-  }
-}
-
-/* ≤1024px: 2 колонки, элементы адаптивно сжимаются, но не шире 365px */
-@media (max-width: 1024px) {
-  #categoryRoot .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    justify-content: center;
-  }
-  #categoryRoot .card {
-    width: 100%;
-    max-width: 365px;       /* ограничиваем максимальную ширину карточки */
-  }
-}
-
-/* На очень узких экранах — сохраняем именно 2 колонки (перекрываем возможные общие стили) */
-@media (max-width: 560px) {
-  #categoryRoot .grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
