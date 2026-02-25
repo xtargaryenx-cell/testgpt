@@ -1,4 +1,5 @@
-// Панель управления Minnori (UTF-8, GitHub API), с поддержкой hero desktop/mobile и промо в меню
+// Панель управления Minnori (UTF-8, GitHub API), с поддержкой hero desktop/mobile,
+// промо в меню и массовой загрузки контента подразделов из XLSX.
 const state = {
   owner: "", repo: "", branch: "main", token: "",
   home: null, nav: null, cat: null, items: []
@@ -10,7 +11,7 @@ const GH_HEADERS = () => ({
   "X-GitHub-Api-Version": "2022-11-28"
 });
 
-// Base64 <-> Uint8Array
+// Base64 <-> Uint8Array + UTF-8
 function b64ToUint8Array(b64) { const bin = atob(b64); const len = bin.length; const u8 = new Uint8Array(len); for (let i = 0; i < len; i++) u8[i] = bin.charCodeAt(i); return u8; }
 function uint8ToB64(u8) { let bin = ""; const chunk = 0x8000; for (let i = 0; i < u8.length; i += chunk) { bin += String.fromCharCode(...u8.subarray(i, i + chunk)); } return btoa(bin); }
 function utf8ToBase64(str) { const u8 = new TextEncoder().encode(str); return uint8ToB64(u8); }
@@ -135,9 +136,7 @@ async function saveHome() {
     const res = await safePutJSON("content/home.json", d, state.home.sha, "Update home.json (hero desktop/mobile)");
     state.home.sha = res.content.sha;
     setStatus("Главная сохранена");
-  } catch (e) {
-    console.error(e); setStatus("Ошибка сохранения главной");
-  }
+  } catch (e) { console.error(e); setStatus("Ошибка сохранения главной"); }
 }
 
 /* ---- Меню (навигация) ---- */
@@ -206,9 +205,7 @@ async function saveMenuPromo() {
     const res = await safePutJSON("content/navigation.json", state.nav.data, state.nav.sha, "Update navigation.json (menu promo)");
     state.nav.sha = res.content.sha;
     setStatus("Промо в меню сохранено");
-  } catch (e) {
-    console.error(e); setStatus("Ошибка сохранения промо");
-  }
+  } catch (e) { console.error(e); setStatus("Ошибка сохранения промо"); }
 }
 async function saveNav() {
   try {
@@ -216,9 +213,7 @@ async function saveNav() {
     state.nav.sha = res.content.sha;
     setStatus("Меню сохранено");
     fillParentsSelect();
-  } catch (e) {
-    console.error(e); setStatus("Ошибка сохранения меню");
-  }
+  } catch (e) { console.error(e); setStatus("Ошибка сохранения меню"); }
 }
 
 /* ---- Категории ---- */
@@ -291,12 +286,10 @@ async function saveCat() {
     }
     state.cat.sha = res.content.sha;
     setStatus("Страница подраздела сохранена");
-  } catch (e) {
-    console.error(e); setStatus("Ошибка сохранения страницы");
-  }
+  } catch (e) { console.error(e); setStatus("Ошибка сохранения страницы"); }
 }
 
-/* Upload helper */
+/* ---- Upload helpers ---- */
 async function uploadToAssets(inputEl, subfolder, onDone) {
   const f = inputEl.files?.[0];
   if (!f) return;
@@ -307,25 +300,81 @@ async function uploadToAssets(inputEl, subfolder, onDone) {
     onDone(dest);
     setStatus(`Загружено: ${dest}`);
     inputEl.value = "";
+  } catch (e) { console.error(e); setStatus("Ошибка загрузки файла"); }
+}
+
+/* ---- XLSX: массовая загрузка элементов подраздела ---- */
+function rowsToItems(rows) {
+  // rows — массив массивов (A1: header)
+  if (!Array.isArray(rows)) return [];
+  let start = 0;
+
+  // Проверка заголовка (рус/англ)
+  if (rows.length) {
+    const h = rows[0].map((v) => String(v || "").trim().toLowerCase());
+    const hasRu = h[0]?.includes("изображ") || h[1]?.includes("подпис") || h[2]?.includes("ссыл");
+    const hasEn = h[0] === "image" || h[1] === "caption" || h[2] === "link" || h[2] === "url";
+    if (hasRu || hasEn) start = 1;
+  }
+
+  const out = [];
+  for (let i = start; i < rows.length; i++) {
+    const r = rows[i] || [];
+    const image = String(r[0] || "").trim();
+    const caption = String(r[1] || "").trim();
+    const link = String(r[2] || "").trim();
+    if (!image) continue; // пропускаем пустые строки и записи без URL
+    out.push({ image, caption, link, target: "_blank" });
+  }
+  return out;
+}
+
+async function handleXlsxUpload(file, append) {
+  if (!file) return;
+  try {
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data, { type: "array" });
+    const sheetName = wb.SheetNames[0];
+    const ws = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false });
+    const items = rowsToItems(rows);
+
+    if (!items.length) {
+      setStatus("Файл XLSX не содержит данных (или нет валидных строк).");
+      return;
+    }
+
+    if (append) {
+      state.items = [...state.items, ...items];
+    } else {
+      state.items = items;
+    }
+    renderItems();
+    setStatus(`Импортировано записей: ${items.length}${append ? " (добавлено к существующим)" : ""}`);
   } catch (e) {
-    console.error(e); setStatus("Ошибка загрузки файла");
+    console.error(e);
+    setStatus("Ошибка разбора XLSX. Проверьте формат файла.");
   }
 }
 
+function downloadXlsxTemplate() {
+  const header = ["Изображение (URL)", "Подпись", "Ссылка"];
+  const sample = [
+    ["assets/img/uploads/sample-1.jpg", "Кеды белые", "https://example.com/p1"],
+    ["assets/img/uploads/sample-2.jpg", "Кроссовки серые", "https://example.com/p2"]
+  ];
+  const ws = XLSX.utils.aoa_to_sheet([header, ...sample]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Подраздел");
+  XLSX.writeFile(wb, "subcategory-template.xlsx");
+}
+
+/* ---- Bind ---- */
 function bind() {
   document.getElementById("connectBtn").addEventListener("click", connect);
 
+  // Главная
   document.getElementById("saveHome").addEventListener("click", saveHome);
-  document.getElementById("saveNav").addEventListener("click", saveNav);
-  document.getElementById("saveMenuPromo").addEventListener("click", saveMenuPromo);
-
-  document.getElementById("promoWomenUpload").addEventListener("change", (e) => {
-    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoWomenImg").value = rel; });
-  });
-  document.getElementById("promoMenUpload").addEventListener("change", (e) => {
-    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoMenImg").value = rel; });
-  });
-
   document.getElementById("homeHeroDesktopUpload").addEventListener("change", (e) => {
     uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("homeHeroDesktop").value = rel; });
   });
@@ -333,10 +382,40 @@ function bind() {
     uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("homeHeroMobile").value = rel; });
   });
 
+  // Навигация / промо
+  document.getElementById("saveNav").addEventListener("click", saveNav);
+  document.getElementById("saveMenuPromo").addEventListener("click", saveMenuPromo);
+  document.getElementById("promoWomenUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoWomenImg").value = rel; });
+  });
+  document.getElementById("promoMenUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => { document.getElementById("promoMenImg").value = rel; });
+  });
+
+  // Категории
   document.getElementById("catParent").addEventListener("change", loadCategory);
   document.getElementById("catSlug").addEventListener("change", loadCategory);
   document.getElementById("saveCat").addEventListener("click", saveCat);
-  document.getElementById("addItem").addEventListener("click", () => { state.items.push({ image: "", caption: "", link: "", target: "_blank" }); renderItems(); });
+  document.getElementById("addItem").addEventListener("click", () => {
+    state.items.push({ image: "", caption: "", link: "", target: "_blank" });
+    renderItems();
+  });
+  document.getElementById("catUpload").addEventListener("change", (e) => {
+    uploadToAssets(e.target, "uploads", (rel) => {
+      state.items.push({ image: rel, caption: "", link: "", target: "_blank" });
+      renderItems();
+    });
+  });
+
+  // XLSX
+  document.getElementById("catXlsxUpload").addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    const append = document.getElementById("catXlsxAppend").checked;
+    handleXlsxUpload(file, append);
+    // сбрасываем инпут, чтобы можно было загрузить тот же файл снова при необходимости
+    e.target.value = "";
+  });
+  document.getElementById("downloadXlsxTemplate").addEventListener("click", downloadXlsxTemplate);
 }
 
 document.addEventListener("DOMContentLoaded", bind);
