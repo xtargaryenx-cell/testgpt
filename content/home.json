@@ -1,7 +1,9 @@
 {
-  "title": "Minnori стильная обувь на каждый день.",
-  "lead": "Описание насколько классная обувь и трам пам пам",
-  "images": [
-    "assets/img/hero-1.jpg"
-  ]
+  "title": "Minnori — обувь",
+  "lead": "Новая коллекция — лёгкость и комфорт на каждый день.",
+  "hero": {
+    "desktop": "assets/img/home-hero-desktop.jpg",
+    "mobile": "assets/img/home-hero-mobile.jpg",
+    "alt": "Баннер коллекции Minnori"
+  }
 }
