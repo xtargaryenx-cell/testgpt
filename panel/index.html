@@ -5,15 +5,11 @@
   <title>Minnori — Панель</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#111111">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="../assets/icons/favicon.png" sizes="144x144">
+  <link href="../assets/css/style.css" rel="stylesheet" />
   <link rel="icon" type="image/png" href="../assets/icons/favicon-32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="../assets/icons/favicon-16.png" sizes="16x16">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="../site.webmanifest">
-
-  <link href="../assets/css/style.css" rel="stylesheet" />
   <style>
     .panel { max-width: 1000px; margin: 80px auto; padding: 0 20px; }
     .card-panel { border: 1px solid #eee; padding: 16px; border-radius: 6px; margin-bottom: 16px; }
@@ -40,7 +36,7 @@
 
 <main class="panel">
   <h1>Панель управления</h1>
-  <p class="muted">Подключитесь к репозиторию GitHub, чтобы редактировать контент. Персональный токен хранится только в вашем браузере.</p>
+  <p class="muted">Подключитесь к репозиторию GitHub, чтобы редактировать контент. Токен хранится только в вашем браузере.</p>
 
   <div class="card-panel">
     <div class="row"><label>GitHub owner</label><input id="ghOwner" type="text" placeholder="ваш-логин" /></div>
@@ -56,8 +52,17 @@
       <h2>Главная</h2>
       <div class="row"><label>Заголовок</label><input id="homeTitle" type="text" /></div>
       <div class="row"><label>Описание (lead)</label><textarea id="homeLead"></textarea></div>
-      <div class="row"><label>Изображения (URL, по одному в строке)</label><textarea id="homeImages"></textarea></div>
-      <div class="row"><label>Загрузка изображения</label><input id="homeUpload" type="file" accept="image/*" /></div>
+
+      <h3>Изображение для десктопа (горизонтальное)</h3>
+      <div class="row"><label>URL</label><input id="homeHeroDesktop" type="url" placeholder="assets/img/home-hero-desktop.jpg" /></div>
+      <div class="row"><label>Загрузить файл</label><input id="homeHeroDesktopUpload" type="file" accept="image/*" /></div>
+
+      <h3>Изображение для мобильных/планшетов (≤1024px, вертикальное)</h3>
+      <div class="row"><label>URL</label><input id="homeHeroMobile" type="url" placeholder="assets/img/home-hero-mobile.jpg" /></div>
+      <div class="row"><label>Загрузить файл</label><input id="homeHeroMobileUpload" type="file" accept="image/*" /></div>
+
+      <div class="row"><label>Alt‑текст</label><input id="homeHeroAlt" type="text" placeholder="Описание баннера" /></div>
+
       <button class="btn" id="saveHome">Сохранить главную</button>
     </div>
 
@@ -70,38 +75,19 @@
 
     <div class="card-panel">
       <h2>Промо в меню</h2>
-
       <h3>Женская</h3>
       <div class="cols-2">
-        <div>
-          <label>Изображение (URL)</label>
-          <input id="promoWomenImg" type="url" placeholder="assets/img/promo-women.jpg" />
-        </div>
-        <div>
-          <label>Ссылка</label>
-          <input id="promoWomenLink" type="url" placeholder="category.html?parent=women&slug=kedy" />
-        </div>
+        <div><label>Изображение (URL)</label><input id="promoWomenImg" type="url" placeholder="assets/img/promo-women.jpg" /></div>
+        <div><label>Ссылка</label><input id="promoWomenLink" type="url" placeholder="category.html?parent=women&slug=kedy" /></div>
       </div>
-      <div class="row">
-        <label>Загрузка изображения</label>
-        <input id="promoWomenUpload" type="file" accept="image/*" />
-      </div>
+      <div class="row"><label>Загрузка изображения</label><input id="promoWomenUpload" type="file" accept="image/*" /></div>
 
       <h3>Мужская</h3>
       <div class="cols-2">
-        <div>
-          <label>Изображение (URL)</label>
-          <input id="promoMenImg" type="url" placeholder="assets/img/promo-men.jpg" />
-        </div>
-        <div>
-          <label>Ссылка</label>
-          <input id="promoMenLink" type="url" placeholder="category.html?parent=men&slug=kedy" />
-        </div>
+        <div><label>Изображение (URL)</label><input id="promoMenImg" type="url" placeholder="assets/img/promo-men.jpg" /></div>
+        <div><label>Ссылка</label><input id="promoMenLink" type="url" placeholder="category.html?parent=men&slug=kedy" /></div>
       </div>
-      <div class="row">
-        <label>Загрузка изображения</label>
-        <input id="promoMenUpload" type="file" accept="image/*" />
-      </div>
+      <div class="row"><label>Загрузка изображения</label><input id="promoMenUpload" type="file" accept="image/*" /></div>
 
       <button class="btn" id="saveMenuPromo">Сохранить промо</button>
     </div>
@@ -109,14 +95,8 @@
     <div class="card-panel">
       <h2>Страницы подразделов</h2>
       <div class="cols-2">
-        <div>
-          <label>Родитель</label>
-          <select id="catParent"></select>
-        </div>
-        <div>
-          <label>Подраздел (slug)</label>
-          <input id="catSlug" type="text" placeholder="например: kedy" />
-        </div>
+        <div><label>Родитель</label><select id="catParent"></select></div>
+        <div><label>Подраздел (slug)</label><input id="catSlug" type="text" placeholder="например: kedy" /></div>
       </div>
       <div class="row"><label>Заголовок</label><input id="catTitle" type="text" placeholder="Мужские кеды" /></div>
       <div class="row"><label>Описание</label><textarea id="catDesc"></textarea></div>
