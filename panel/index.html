@@ -15,7 +15,7 @@
     .card-panel { border: 1px solid #eee; padding: 16px; border-radius: 6px; margin-bottom: 16px; }
     .row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: start; margin-bottom: 12px; }
     .row label { color: var(--muted); font-size: 14px; }
-    input[type="text"], input[type="url"], input[type="number"], textarea {
+    input[type="text"], input[type="url"], input[type="number"], textarea, select {
       width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font: inherit;
     }
     textarea { min-height: 100px; }
@@ -25,6 +25,7 @@
     .items { display: grid; gap: 12px; }
     .item { border: 1px dashed #ddd; padding: 10px; border-radius: 6px; }
     .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hint { color: var(--muted); font-size: 13px; line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -105,16 +106,36 @@
         <div><label>Отступ (gap)</label><input id="catGap" type="text" value="24px" /></div>
       </div>
 
-      <h3>Фотографии</h3>
+      <h3>Фотографии (ручное добавление)</h3>
       <div id="items" class="items"></div>
       <button class="btn secondary" id="addItem">Добавить фото</button>
       <div class="row"><label>Загрузка изображения</label><input id="catUpload" type="file" accept="image/*" /></div>
+
+      <h3>Массовая загрузка из XLSX</h3>
+      <div class="row">
+        <label>Файл XLSX</label>
+        <input id="catXlsxUpload" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+      </div>
+      <div class="row">
+        <label>Режим загрузки</label>
+        <label class="hint"><input type="checkbox" id="catXlsxAppend" /> Добавить к существующим (если не отмечено — текущий список будет заменён)</label>
+      </div>
+      <div class="row">
+        <label>Шаблон</label>
+        <button class="btn secondary" id="downloadXlsxTemplate">Скачать шаблон XLSX</button>
+      </div>
+      <p class="hint">
+        Структура файла: 1‑я колонка — Изображение (URL), 2‑я — Подпись, 3‑я — Ссылка. Первая строка может быть заголовком (распознаётся автоматически).
+        Пустые строки и записи без URL игнорируются.
+      </p>
 
       <button class="btn" id="saveCat">Сохранить страницу</button>
     </div>
   </div>
 </main>
 
+<!-- SheetJS (XLSX) для разбора файлов таблиц -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
