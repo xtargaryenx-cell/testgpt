@@ -8,5 +8,12 @@
     "columns": 3,
     "gap": "24px"
   },
-  "items": []
+  "items": [
+    {
+      "image": "assets/img/uploads/1772028905119-2931775WA-12.jpg",
+      "caption": "ыввф",
+      "link": "",
+      "target": "_blank"
+    }
+  ]
 }
