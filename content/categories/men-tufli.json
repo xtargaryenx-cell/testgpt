@@ -1,0 +1,19 @@
+{
+  "parentId": "men",
+  "slug": "tufli",
+  "slugTitle": "tufli",
+  "title": "",
+  "description": "",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": [
+    {
+      "image": "",
+      "caption": "",
+      "link": "",
+      "target": "_blank"
+    }
+  ]
+}
