@@ -317,3 +317,11 @@ a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
   }
   */
 }
+/* Категории: фиксируем ширину изображения 365px, высота по пропорции */
+#categoryRoot .card img {
+  width: 365px;
+  max-width: 100%; /* чтобы на узких экранах не вылезало за колонку */
+  height: auto;
+  margin: 0 auto; /* центрируем картинку в колонке */
+  display: block;
+}
