@@ -10,39 +10,105 @@
   },
   "items": [
     {
-      "image": "assets/img/men-kedy-1.jpg",
-      "caption": "Minnori Canvas One",
-      "link": "https://example.com/kedy-1",
+      "image": "assets/img/uploads/mkedy/3251920TCC-14.jpg",
+      "caption": "Minnori Etra",
+      "link": "https://www.wildberries.ru/catalog/224646076/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/men-kedy-2.jpg",
-      "caption": "Minnori Leather Low",
-      "link": "https://example.com/kedy-2",
+      "image": "assets/img/uploads/mkedy/3251920TBC-i5.jpg",
+      "caption": "Minnori Etra",
+      "link": "https://www.wildberries.ru/catalog/342340120/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/men-kedy-3.jpg",
+      "image": "assets/img/uploads/mkedy/3251920TGV-i1.jpg",
+      "caption": "Minnori Etra",
+      "link": "https://www.wildberries.ru/catalog/342387465/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/3251920TBN-i1.jpg",
+      "caption": "Minnori Etra",
+      "link": "https://www.wildberries.ru/catalog/341724629/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/2031879TBF-i5.jpg",
+      "caption": "Minnori Break Rule",
+      "link": "https://www.wildberries.ru/catalog/212082452/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/2061814TWA-i4.jpg",
       "caption": "Minnori Court Clean",
-      "link": "https://example.com/kedy-3",
+      "link": "https://www.wildberries.ru/catalog/224683246/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771933026632-men-kedy-1.jpg",
-      "caption": "Minnori Etra | Art WB: 152296689",
-      "link": "https://www.wildberries.ru/catalog/212031244/detail.aspx",
+      "image": "assets/img/uploads/mkedy/3471918TBLC-i4.jpg",
+      "caption": "Minnori Canvas One",
+      "link": "https://www.wildberries.ru/catalog/230904737/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
-      "caption": "Etra | Art WB: 152296689",
+      "image": "assets/img/uploads/mkedy/3471918TWA-i3.jpg",
+      "caption": "Minnori Canvas One",
       "link": "https://www.wildberries.ru/catalog/230908840/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
-      "caption": "Court Clean | Art WB: 152296689",
-      "link": "https://example.com/kedy-3",
+      "image": "assets/img/uploads/mkedy/196492BC-14.jpg",
+      "caption": "Minnori Meta",
+      "link": "https://www.wildberries.ru/catalog/212031243/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/196492WA-12.jpg",
+      "caption": "Minnori Meta",
+      "link": "https://www.wildberries.ru/catalog/218797175/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/196492BA-I4.jpg",
+      "caption": "Minnori Meta",
+      "link": "https://www.wildberries.ru/catalog/212031244/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/2611774WA-13.jpg",
+      "caption": "Minnori Leather Low",
+      "link": "https://www.wildberries.ru/catalog/152296689/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/3741969TWC-i3.jpg",
+      "caption": "Minnori Edge",
+      "link": "https://www.wildberries.ru/catalog/347647292/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/257492WA-12.jpg",
+      "caption": "Minnori Low",
+      "link": "https://www.wildberries.ru/catalog/347459621/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/3471975TGC-i1.jpg",
+      "caption": "Minnori Prime",
+      "link": "https://www.wildberries.ru/catalog/347629584/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/257492PWA-i1.jpg",
+      "caption": "Minnori Low Doted",
+      "link": "https://www.wildberries.ru/catalog/347477358/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkedy/2451687WA-11.jpg",
+      "caption": "Minnori Clean 90X",
+      "link": "https://www.wildberries.ru/catalog/346780551/detail.aspx",
       "target": "_blank"
     }
   ]
