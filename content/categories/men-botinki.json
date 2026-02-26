@@ -3,16 +3,154 @@
   "slug": "botinki",
   "slugTitle": "botinki",
   "title": "Мужские ботинки",
-  "description": "тест тестовый",
+  "description": "Модные дизайнерские решения и прекрасное качество делают ботинки Minnori идеальным выбором для прогулок и повседневной носки.",
   "grid": {
     "columns": 3,
     "gap": "24px"
   },
   "items": [
     {
-      "image": "assets/img/uploads/1772028905119-2931775WA-12.jpg",
-      "caption": "ыввф",
-      "link": "",
+      "image": "assets/img/uploads/mboti/2121728BBA-i6.jpg",
+      "caption": "Minnori Farell",
+      "link": "https://www.wildberries.ru/catalog/172565474/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/2121728BBRA-i5.jpg",
+      "caption": "Minnori Farell",
+      "link": "https://www.wildberries.ru/catalog/172565475/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/2121730BBA-i2.jpg",
+      "caption": "Minnori Wear Ots",
+      "link": "https://www.wildberries.ru/catalog/172580726/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/895417BBF-i3.jpg",
+      "caption": "Minnori Lexen",
+      "link": "https://www.wildberries.ru/catalog/171559968/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BCC-i4.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/180387095/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/895417BA-1r9.jpg",
+      "caption": "Minnori Lexen",
+      "link": "https://www.wildberries.ru/catalog/171559969/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319039BBF-1.jpg",
+      "caption": "Minnori Pure Desert",
+      "link": "https://www.wildberries.ru/catalog/178288424/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319039BBA-1.jpg",
+      "caption": "Minnori Pure Desert",
+      "link": "https://www.wildberries.ru/catalog/178288428/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319039BCN-1.jpg",
+      "caption": "Minnori Pure Desert",
+      "link": "https://www.wildberries.ru/catalog/178288429/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BBN-1.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/180387094/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/2121729BBA-i3.jpg",
+      "caption": "Minnori Boston",
+      "link": "https://www.wildberries.ru/catalog/171354390/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BBC-i6.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/198659769/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BCC-i4.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/180387095/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BBA-1.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/180387096/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/3781730BBA-3.jpg",
+      "caption": "Minnori Wear Rework",
+      "link": "https://www.wildberries.ru/catalog/678826654/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/319221BBRN-1.jpg",
+      "caption": "Minnori York",
+      "link": "https://www.wildberries.ru/catalog/198659770/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/2121702BA-1.jpg",
+      "caption": "Minnori Low Wear",
+      "link": "https://www.wildberries.ru/catalog/506294107/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/2121702MDBF-1.jpg",
+      "caption": "Minnori Low Wear",
+      "link": "https://www.wildberries.ru/catalog/506290248/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/4011730MBA-3.jpg",
+      "caption": "Minnori Wear R2",
+      "link": "https://www.wildberries.ru/catalog/504230612/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/3772016BBRA-4.jpg",
+      "caption": "Minnori Edvard",
+      "link": "https://www.wildberries.ru/catalog/504307460/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/3772016BBA-1.jpg",
+      "caption": "Minnori Edvard",
+      "link": "https://www.wildberries.ru/catalog/504304344/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/3781728BBA-2.jpg",
+      "caption": "Minnori Farell Rework",
+      "link": "https://www.wildberries.ru/catalog/504353403/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/401029MBRN-1.jpg",
+      "caption": "Minnori Strong",
+      "link": "https://www.wildberries.ru/catalog/504178432/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mboti/401029MBA-3.jpg",
+      "caption": "Minnori Strong",
+      "link": "https://www.wildberries.ru/catalog/504183006/detail.aspx",
       "target": "_blank"
     }
   ]
