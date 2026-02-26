@@ -1,0 +1,25 @@
+{
+  "parentId": "men",
+  "slug": "krossovki",
+  "slugTitle": "krossovki",
+  "title": "Мужские кроссовки",
+  "description": "Кроссовки один из самых популярных видов обуви, который идеально подходит для активных людей в городской жизни.",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": [
+    {
+      "image": "assets/img/uploads/mkrossi/3641970TBA-1.jpg",
+      "caption": "Minnori Slide",
+      "link": "https://www.wildberries.ru/catalog/347668280/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mkrossi/3641970TWA-I2.jpg",
+      "caption": "Minnori Slide",
+      "link": "https://www.wildberries.ru/catalog/347675260/detail.aspx",
+      "target": "_blank"
+    }
+  ]
+}
