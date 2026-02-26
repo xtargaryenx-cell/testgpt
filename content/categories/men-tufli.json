@@ -3,16 +3,40 @@
   "slug": "tufli",
   "slugTitle": "tufli",
   "title": "Мужские туфли",
-  "description": "бла бла",
+  "description": "Современное прочтение классики. Броги и дерби от Minnori вы легко сможете сочетать как с джинсами и штанами, так и с брюками и деловыми костюмами.",
   "grid": {
     "columns": 3,
     "gap": "24px"
   },
   "items": [
     {
-      "image": "",
-      "caption": "",
-      "link": "",
+      "image": "assets/img/uploads/mtyfli/773303BRA-1.jpg",
+      "caption": "Minnori Barington",
+      "link": "https://www.wildberries.ru/catalog/211880295/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mtyfli/773303BA-1.jpg",
+      "caption": "Minnori Barington",
+      "link": "https://www.wildberries.ru/catalog/211880294/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mtyfli/7731666BA-1.jpg",
+      "caption": "Minnori Stanford",
+      "link": "https://www.wildberries.ru/catalog/212025199/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mtyfli/7731666BC-1.jpg",
+      "caption": "Minnori Stanford",
+      "link": "https://www.wildberries.ru/catalog/212025198/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/mtyfli/7731666BRC-1.jpg",
+      "caption": "Minnori Stanford",
+      "link": "https://www.wildberries.ru/catalog/212025200/detail.aspx",
       "target": "_blank"
     }
   ]
