@@ -3,46 +3,100 @@
   "slug": "kedy",
   "slugTitle": "Женские кеды",
   "title": "Женские кеды",
-  "description": "Только натуральная кожа и лучшие матераилы",
+  "description": "Женские кожаные кеды — это стильный и удобный выбор современной девушки, который подходит для повседневного использования в любое время года.",
   "grid": {
     "columns": 3,
     "gap": "24px"
   },
   "items": [
     {
-      "image": "assets/img/men-kedy-1.jpg",
-      "caption": "Minnori Canvas One",
-      "link": "https://example.com/kedy-1",
+      "image": "assets/img/uploads/wkedy/3061866BGC-9.jpg",
+      "caption": "Minnori Lets",
+      "link": "https://www.wildberries.ru/catalog/220460279/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/men-kedy-2.jpg",
-      "caption": "Minnori Leather Low",
-      "link": "https://example.com/kedy-2",
+      "image": "assets/img/uploads/wkedy8231868BGC-i1.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/229252301/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/men-kedy-3.jpg",
-      "caption": "Minnori Court Clean",
-      "link": "https://example.com/kedy-3",
+      "image": "assets/img/uploads/wkedy8231868SBC-i5.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/373167002/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771933026632-men-kedy-1.jpg",
-      "caption": "Ð¿ÑÐ¿",
-      "link": "https://example.com/kedy-3",
+      "image": "assets/img/uploads/wkedy3751867HD-i2.jpg",
+      "caption": "Minnori Laime",
+      "link": "https://www.wildberries.ru/catalog/374121527/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
-      "caption": "",
-      "link": "https://example.com/kedy-3",
+      "image": "assets/img/uploads/wkedy3752011SBC-i1.jpg",
+      "caption": "Minnori Vel One",
+      "link": "https://www.wildberries.ru/catalog/374008691/detail.aspx",
       "target": "_blank"
     },
     {
-      "image": "assets/img/uploads/1771934992791-3251920TGV-i8.jpg",
-      "caption": "Класные кеды 3",
-      "link": "https://example.com/kedy-3",
+      "image": "assets/img/uploads/wkedy8231868DRV-i1.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/373141728/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy8231868MAD-i1.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/373774254/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy3751867BGA-i1.jpg",
+      "caption": "Minnori Laime",
+      "link": "https://www.wildberries.ru/catalog/374128934/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy8231868SIA-i1.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/373152335/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy8231868HD-i1.jpg",
+      "caption": "Minnori Selena",
+      "link": "https://www.wildberries.ru/catalog/373715337/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy3752011HV-i1.jpg",
+      "caption": "Minnori Vel One",
+      "link": "https://www.wildberries.ru/catalog/373996451/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy3752011SIA-i1.jpg",
+      "caption": "Minnori Vel One",
+      "link": "https://www.wildberries.ru/catalog/374039351/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy3752011MAD-i1.jpg",
+      "caption": "Minnori Vel One",
+      "link": "https://www.wildberries.ru/catalog/374086166/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy3751867WC-i1.jpg",
+      "caption": "Minnori Laime",
+      "link": "https://www.wildberries.ru/catalog/374144729/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkedy9211867BC-1.jpg",
+      "caption": "Minnori Nami",
+      "link": "https://www.wildberries.ru/catalog/497641849/detail.aspx",
       "target": "_blank"
     }
   ]
