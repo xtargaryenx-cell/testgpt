@@ -1,0 +1,31 @@
+{
+  "parentId": "women",
+  "slug": "krossovki",
+  "slugTitle": "krossovki",
+  "title": "Женские кеды",
+  "description": "",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": [
+    {
+      "image": "assets/img/uploads/wkros/2961846WA-10.jpg",
+      "caption": "Minnori Pure One",
+      "link": "https://www.wildberries.ru/catalog/161544711/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkros/3401929MBA-1.jpg",
+      "caption": "Minnori Wool Way",
+      "link": "https://www.wildberries.ru/catalog/271421867/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wkros/3401929MWA-1.jpg",
+      "caption": "Minnori Wool Way",
+      "link": "https://www.wildberries.ru/catalog/271422445/detail.aspx",
+      "target": "_blank"
+    }
+  ]
+}
