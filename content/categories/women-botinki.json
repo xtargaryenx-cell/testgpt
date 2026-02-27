@@ -1,0 +1,127 @@
+{
+  "parentId": "women",
+  "slug": "botinki",
+  "slugTitle": "botinki",
+  "title": "Женские ботинки",
+  "description": "Женские ботинки бренда Minnori идеально подходят для создания модных образов и повседневной носки в самых разнообразных ситуациях.",
+  "grid": {
+    "columns": 3,
+    "gap": "24px"
+  },
+  "items": [
+    {
+      "image": "assets/img/uploads/wboti/145544BV-i1",
+      "caption": "Minnori Aurora",
+      "link": "https://www.wildberries.ru/catalog/204278998/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145585BCN-i1.jpg",
+      "caption": "Minnori Rachel",
+      "link": "https://www.wildberries.ru/catalog/171289631/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/2651743MBRA-i1.jpg",
+      "caption": "Minnori Stella",
+      "link": "https://www.wildberries.ru/catalog/259211663/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/326543MBC-I1.jpg",
+      "caption": "Minnori Carmen",
+      "link": "https://www.wildberries.ru/catalog/197790064/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145585BRA-i5.jpg",
+      "caption": "Minnori Rachel",
+      "link": "https://www.wildberries.ru/catalog/171289638/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/316544BBGA-1.jpg",
+      "caption": "Minnori Rewind",
+      "link": "https://www.wildberries.ru/catalog/179021903/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145544BA-1.jpg",
+      "caption": "Minnori Aurora",
+      "link": "https://www.wildberries.ru/catalog/177250253/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145585BA-1.jpg",
+      "caption": "Minnori Rachel",
+      "link": "https://www.wildberries.ru/catalog/171289628/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/2651743MBA-1.jpg",
+      "caption": "Minnori Stella",
+      "link": "https://www.wildberries.ru/catalog/259211136/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145585MCN-1.jpg",
+      "caption": "Minnori Rachel Wool",
+      "link": "https://www.wildberries.ru/catalog/180375977/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/316543BBA-1.jpg",
+      "caption": "Minnori Stella",
+      "link": "https://www.wildberries.ru/catalog/178304068/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/2891828MDRA-1.jpg",
+      "caption": "Minnori Weekly",
+      "link": "https://www.wildberries.ru/catalog/197771607/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/3081875MBA-1.jpg",
+      "caption": "Minnori Evelyn Wool",
+      "link": "https://www.wildberries.ru/catalog/259204895/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/3081875MCC-1.jpg",
+      "caption": "Minnori Evelyn Wool",
+      "link": "https://www.wildberries.ru/catalog/259204894/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/3081875MWC-1.jpg",
+      "caption": "Minnori Evelyn Wool",
+      "link": "https://www.wildberries.ru/catalog/259203616/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/2621928MSLC-1.jpg",
+      "caption": "Minnori Esse",
+      "link": "https://www.wildberries.ru/catalog/266394217/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/314543BBA-1.jpg",
+      "caption": "Minnori Rachel Rework",
+      "link": "https://www.wildberries.ru/catalog/179018656/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/145659BCC-1.jpg",
+      "caption": "Minnori MeanAs",
+      "link": "https://www.wildberries.ru/catalog/173108831/detail.aspx",
+      "target": "_blank"
+    },
+    {
+      "image": "assets/img/uploads/wboti/316658BBGA-2.jpg",
+      "caption": "Minnori Mean Rework",
+      "link": "https://www.wildberries.ru/catalog/178298131/detail.aspx",
+      "target": "_blank"
+    }
+  ]
+}
