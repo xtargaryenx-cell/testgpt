@@ -11,6 +11,19 @@ function setViewportVar() {
 }
 function isMobile() { return window.matchMedia("(max-width: 1023.98px)").matches; }
 
+/* Установка meta description (с созданием тега при отсутствии) */
+function setMetaDescription(text) {
+  const head = document.head || document.getElementsByTagName("head")[0];
+  let tag = head.querySelector('meta[name="description"]');
+  const content = String(text || "").replace(/\s+/g, " ").trim().slice(0, 300);
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute("name", "description");
+    head.appendChild(tag);
+  }
+  tag.setAttribute("content", content || "Обувь Minnori — официальный сайт.");
+}
+
 function toggleMenu(open) {
   const menu = qs("#overlayMenu");
   if (!menu) return;
@@ -81,17 +94,7 @@ async function buildMenu() {
     console.error("Не удалось загрузить меню:", e);
   }
 }
-function setMetaDescription(text) {
-  const head = document.head || document.getElementsByTagName("head")[0];
-  let tag = head.querySelector('meta[name="description"]');
-  const content = String(text || "").replace(/\s+/g, " ").trim().slice(0, 300);
-  if (!tag) {
-    tag = document.createElement("meta");
-    tag.setAttribute("name", "description");
-    head.appendChild(tag);
-  }
-  tag.setAttribute("content", content || "Обувь Minnori — официальный сайт.");
-}
+
 function initMenu() {
   qs(".menu-toggle")?.addEventListener("click", () => toggleMenu());
   qs("#menuCloseBtn")?.addEventListener("click", () => toggleMenu(false));
