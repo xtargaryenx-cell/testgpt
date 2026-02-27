@@ -81,7 +81,17 @@ async function buildMenu() {
     console.error("Не удалось загрузить меню:", e);
   }
 }
-
+function setMetaDescription(text) {
+  const head = document.head || document.getElementsByTagName("head")[0];
+  let tag = head.querySelector('meta[name="description"]');
+  const content = String(text || "").replace(/\s+/g, " ").trim().slice(0, 300);
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute("name", "description");
+    head.appendChild(tag);
+  }
+  tag.setAttribute("content", content || "Обувь Minnori — официальный сайт.");
+}
 function initMenu() {
   qs(".menu-toggle")?.addEventListener("click", () => toggleMenu());
   qs("#menuCloseBtn")?.addEventListener("click", () => toggleMenu(false));
