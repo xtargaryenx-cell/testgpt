@@ -11,6 +11,19 @@ function setViewportVar() {
 }
 function isMobile() { return window.matchMedia("(max-width: 1023.98px)").matches; }
 
+/* Приводим любые asset-пути к корню сайта: "/...".
+   - Оставляем http/https и data: как есть
+   - Для относительных "assets/..." добавляем ведущий слэш "/assets/..." */
+function resolveAsset(url) {
+  if (!url) return url;
+  let u = String(url).trim();
+  if (/^(?:https?:)?\/\//i.test(u)) return u;  // http(s) или protocol-relative
+  if (/^data:/i.test(u)) return u;             // data URI
+  if (u.startsWith("/")) return u.replace(/\/{2,}/g, "/");
+  u = u.replace(/^\.\/+/, "");                 // срезаем "./"
+  return ("/" + u).replace(/\/{2,}/g, "/");
+}
+
 /* Установка meta description */
 function setMetaDescription(text) {
   const head = document.head || document.getElementsByTagName("head")[0];
@@ -29,7 +42,7 @@ function buildCatUrl(parentId, slug) {
   if (!parentId || !slug) return "#";
   return `/${encodeURIComponent(String(parentId))}/${encodeURIComponent(String(slug))}/`;
 }
-/* Конвертация старых ссылок вида category.html?parent=...&slug=... -> /parent/slug/ */
+/* category.html?parent=...&slug=... -> /parent/slug/ (для обратной совместимости в данных) */
 function toFriendlyLink(link) {
   if (!link) return link;
   try {
@@ -39,7 +52,7 @@ function toFriendlyLink(link) {
       const s = u.searchParams.get("slug");
       if (p && s) return buildCatUrl(p, s);
     }
-  } catch (e) { /* игнор */ }
+  } catch {}
   return link;
 }
 
@@ -93,8 +106,11 @@ function buildMenuLayout(nav) {
   const wHref = toFriendlyLink(wHrefRaw) || fallbackLink(women);
   const mHref = toFriendlyLink(mHrefRaw) || fallbackLink(men);
 
-  const wImg = wPromo.image ? `<a class="promo" href="${wHref}"><img src="${wPromo.image}" alt="Женская обувь"></a>` : "";
-  const mImg = mPromo.image ? `<a class="promo" href="${mHref}"><img src="${mPromo.image}" alt="Мужская обувь"></a>` : "";
+  const wImgSrc = resolveAsset(wPromo.image);
+  const mImgSrc = resolveAsset(mPromo.image);
+
+  const wImg = wImgSrc ? `<a class="promo" href="${wHref}"><img src="${wImgSrc}" alt="Женская обувь"></a>` : "";
+  const mImg = mImgSrc ? `<a class="promo" href="${mHref}"><img src="${mImgSrc}" alt="Мужская обувь"></a>` : "";
 
   root.innerHTML = `
     <div class="menu-home"><a href="/">Главная</a></div>
