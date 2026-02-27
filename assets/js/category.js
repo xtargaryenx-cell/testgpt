@@ -1,8 +1,18 @@
-// Страница подкатегории: загрузка данных, установка title/description и рендер
+// Страница подкатегории: загрузка данных, title/description и рендер
 
 function getQueryParam(name) {
   const u = new URL(location.href);
   return u.searchParams.get(name) || "";
+}
+/* Чтение параметров из path: /{parent}/{slug}/ */
+function getRouteParams() {
+  const path = location.pathname.replace(/^\/+|\/+$/g, ""); // обрежем нач/кон слеши
+  const parts = path.split("/");
+  // Если это корень или одиночный сегмент — параметров нет
+  if (parts.length >= 2 && !parts[0].endsWith(".html")) {
+    return { parent: decodeURIComponent(parts[0] || ""), slug: decodeURIComponent(parts[1] || "") };
+  }
+  return null;
 }
 
 function adjByParentId(id, fallbackTitle) {
@@ -45,13 +55,14 @@ function cardHTML(item) {
     const target = item.target || "_self";
     const rel = target === "_blank" ? ' rel="noopener"' : "";
     return `<a class="card" href="${item.link}" target="${target}"${rel}>${inner}</a>`;
-  }
+    }
   return `<div class="card">${inner}</div>`;
 }
 
 async function buildCategory() {
-  const parentId = getQueryParam("parent");
-  const slug = getQueryParam("slug");
+  const route = getRouteParams();
+  const parentId = route?.parent || getQueryParam("parent");
+  const slug = route?.slug || getQueryParam("slug");
 
   if (!parentId || !slug) {
     console.warn("Не заданы параметры parent/slug");
@@ -62,8 +73,8 @@ async function buildCategory() {
 
   try {
     const [catData, nav] = await Promise.all([
-      fetchJSON(`content/categories/${encodeURIComponent(parentId)}-${encodeURIComponent(slug)}.json`),
-      fetchJSON("content/navigation.json")
+      fetchJSON(`/content/categories/${encodeURIComponent(parentId)}-${encodeURIComponent(slug)}.json`),
+      fetchJSON("/content/navigation.json")
     ]);
 
     document.title = composeTitle(nav, parentId, slug, catData);
