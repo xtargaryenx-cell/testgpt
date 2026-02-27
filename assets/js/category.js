@@ -6,9 +6,8 @@ function getQueryParam(name) {
 }
 /* Чтение параметров из path: /{parent}/{slug}/ */
 function getRouteParams() {
-  const path = location.pathname.replace(/^\/+|\/+$/g, ""); // обрежем нач/кон слеши
+  const path = location.pathname.replace(/^\/+|\/+$/g, "");
   const parts = path.split("/");
-  // Если это корень или одиночный сегмент — параметров нет
   if (parts.length >= 2 && !parts[0].endsWith(".html")) {
     return { parent: decodeURIComponent(parts[0] || ""), slug: decodeURIComponent(parts[1] || "") };
   }
@@ -48,14 +47,15 @@ function composeDescription(nav, parentId, slug, catData) {
 }
 
 function cardHTML(item) {
-  const img = item.image ? `<img src="${item.image}" alt="${item.caption || ""}">` : "";
+  const src = resolveAsset(item.image);
+  const img = src ? `<img src="${src}" alt="${item.caption || ""}">` : "";
   const cap = item.caption ? `<div class="caption">${item.caption}</div>` : "";
   const inner = `${img}${cap}`;
   if (item.link) {
     const target = item.target || "_self";
     const rel = target === "_blank" ? ' rel="noopener"' : "";
     return `<a class="card" href="${item.link}" target="${target}"${rel}>${inner}</a>`;
-    }
+  }
   return `<div class="card">${inner}</div>`;
 }
 
