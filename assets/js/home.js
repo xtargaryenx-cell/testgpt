@@ -25,6 +25,15 @@ function renderHero(data) {
   const textBlock = (title || lead) ? `<div class="container hero">${title}${lead}</div>` : "";
 
   root.innerHTML = html + textBlock;
+
+  // Установим meta description для главной
+  const parts = [];
+  if (data.lead) parts.push(data.lead);
+  if (data.title && (!data.lead || !String(data.lead).toLowerCase().includes(String(data.title).toLowerCase()))) {
+    parts.push(data.title);
+  }
+  const desc = `Обувь Minnori — ${parts.join(" ")}`.trim();
+  setMetaDescription(desc);
 }
 
 async function buildHome() {
