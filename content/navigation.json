@@ -44,7 +44,7 @@
   "menuPromo": {
     "women": {
       "image": "assets/img/promo-women.jpg",
-      "link": "category.html?parent=women&slug=kedy"
+      "link": "/women/kedy/"
     },
     "men": {
       "image": "assets/img/promo-men.jpg",
