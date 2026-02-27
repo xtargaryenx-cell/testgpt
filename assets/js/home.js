@@ -3,8 +3,8 @@ function renderHero(data) {
   if (!root) return;
 
   const hero = data.hero || {};
-  const desktop = hero.desktop || "";
-  const mobile  = hero.mobile  || "";
+  const desktop = resolveAsset(hero.desktop || "");
+  const mobile  = resolveAsset(hero.mobile  || "");
   const altText = hero.alt || data.title || "Hero";
 
   const html = `
@@ -26,7 +26,6 @@ function renderHero(data) {
 
   root.innerHTML = html + textBlock;
 
-  // Установим meta description для главной
   const parts = [];
   if (data.lead) parts.push(data.lead);
   if (data.title && (!data.lead || !String(data.lead).toLowerCase().includes(String(data.title).toLowerCase()))) {
@@ -38,7 +37,7 @@ function renderHero(data) {
 
 async function buildHome() {
   try {
-    const data = await fetchJSON("content/home.json");
+    const data = await fetchJSON("/content/home.json");
     renderHero(data);
   } catch (e) {
     console.error("Не удалось загрузить главную:", e);
