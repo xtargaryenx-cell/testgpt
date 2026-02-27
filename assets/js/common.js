@@ -11,7 +11,7 @@ function setViewportVar() {
 }
 function isMobile() { return window.matchMedia("(max-width: 1023.98px)").matches; }
 
-/* Установка meta description (с созданием тега при отсутствии) */
+/* Установка meta description */
 function setMetaDescription(text) {
   const head = document.head || document.getElementsByTagName("head")[0];
   let tag = head.querySelector('meta[name="description"]');
@@ -22,6 +22,25 @@ function setMetaDescription(text) {
     head.appendChild(tag);
   }
   tag.setAttribute("content", content || "Обувь Minnori — официальный сайт.");
+}
+
+/* Friendly URL для подкатегорий */
+function buildCatUrl(parentId, slug) {
+  if (!parentId || !slug) return "#";
+  return `/${encodeURIComponent(String(parentId))}/${encodeURIComponent(String(slug))}/`;
+}
+/* Конвертация старых ссылок вида category.html?parent=...&slug=... -> /parent/slug/ */
+function toFriendlyLink(link) {
+  if (!link) return link;
+  try {
+    const u = new URL(link, location.origin);
+    if (u.pathname.endsWith("category.html")) {
+      const p = u.searchParams.get("parent");
+      const s = u.searchParams.get("slug");
+      if (p && s) return buildCatUrl(p, s);
+    }
+  } catch (e) { /* игнор */ }
+  return link;
 }
 
 function toggleMenu(open) {
@@ -53,7 +72,7 @@ function buildMenuLayout(nav) {
   const makeColumn = (parent) => {
     if (!parent) return "";
     const items = (parent.children || []).map(c => {
-      const href = `category.html?parent=${encodeURIComponent(parent.id)}&slug=${encodeURIComponent(c.slug)}`;
+      const href = buildCatUrl(parent.id, c.slug);
       return `<a href="${href}">${c.title || c.slug}</a>`;
     }).join("");
     return `
@@ -67,16 +86,18 @@ function buildMenuLayout(nav) {
   function fallbackLink(parent) {
     if (!parent || !parent.children || !parent.children.length) return "#";
     const c = parent.children[0];
-    return `category.html?parent=${encodeURIComponent(parent.id)}&slug=${encodeURIComponent(c.slug)}`;
+    return buildCatUrl(parent.id, c.slug);
   }
-  const wHref = wPromo.link || fallbackLink(women);
-  const mHref = mPromo.link || fallbackLink(men);
+  const wHrefRaw = wPromo.link || fallbackLink(women);
+  const mHrefRaw = mPromo.link || fallbackLink(men);
+  const wHref = toFriendlyLink(wHrefRaw) || fallbackLink(women);
+  const mHref = toFriendlyLink(mHrefRaw) || fallbackLink(men);
 
   const wImg = wPromo.image ? `<a class="promo" href="${wHref}"><img src="${wPromo.image}" alt="Женская обувь"></a>` : "";
   const mImg = mPromo.image ? `<a class="promo" href="${mHref}"><img src="${mPromo.image}" alt="Мужская обувь"></a>` : "";
 
   root.innerHTML = `
-    <div class="menu-home"><a href="./">Главная</a></div>
+    <div class="menu-home"><a href="/">Главная</a></div>
     <div class="menu-grid">
       ${makeColumn(women)}
       ${makeColumn(men)}
@@ -88,7 +109,7 @@ function buildMenuLayout(nav) {
 
 async function buildMenu() {
   try {
-    const nav = await fetchJSON("content/navigation.json");
+    const nav = await fetchJSON("/content/navigation.json");
     buildMenuLayout(nav);
   } catch (e) {
     console.error("Не удалось загрузить меню:", e);
