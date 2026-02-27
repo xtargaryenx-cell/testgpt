@@ -1,0 +1,11 @@
+# Включаем mod_rewrite
+RewriteEngine On
+
+# Если запрошен реальный файл/папка — ничего не трогаем
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Дружественные URL: /{parent}/{slug}/ -> category.html?parent={parent}&slug={slug}
+# Поддержка слеша на конце/без слеша
+RewriteRule ^([^/]+)/([^/]+)/?$ category.html?parent=$1&slug=$2 [QSA,L]
