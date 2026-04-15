@@ -39,6 +39,16 @@
           "title": "Ботинки"
         }
       ]
+    },
+    {
+      "id": "aksessuary",
+      "title": "Аксессуары",
+      "children": [
+        {
+          "slug": "ochki",
+          "title": "Солнцезащитные очки"
+        }
+      ]
     }
   ],
   "menuPromo": {
